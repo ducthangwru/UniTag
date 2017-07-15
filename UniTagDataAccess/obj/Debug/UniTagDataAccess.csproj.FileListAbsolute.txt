@@ -3,3 +3,8 @@ C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\bin\Debug\UniTagDataAcce
 C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Debug\UniTagDataAccess.csprojResolveAssemblyReference.cache
 C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Debug\UniTagDataAccess.dll
 C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Debug\UniTagDataAccess.pdb
+C:\Users\ToanTV\Documents\UniTag\UniTagDataAccess\bin\Debug\UniTagDataAccess.dll
+C:\Users\ToanTV\Documents\UniTag\UniTagDataAccess\bin\Debug\UniTagDataAccess.pdb
+C:\Users\ToanTV\Documents\UniTag\UniTagDataAccess\obj\Debug\UniTagDataAccess.csprojResolveAssemblyReference.cache
+C:\Users\ToanTV\Documents\UniTag\UniTagDataAccess\obj\Debug\UniTagDataAccess.dll
+C:\Users\ToanTV\Documents\UniTag\UniTagDataAccess\obj\Debug\UniTagDataAccess.pdb
