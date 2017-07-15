@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <script src="https://use.fontawesome.com/ce7b65caae.js"></script>
+    <link href="~/Assets/customstyle/customstyle.css" rel="stylesheet" />
+    <!-- Bootstrap Core CSS -->
+    <link href="/Assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MetisMenu CSS -->
+    <link href="/Assets/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/Assets/dist/css/sb-admin-2.css" rel="stylesheet">
+    <!-- Morris Charts CSS -->
+    <link href="/Assets/vendor/morrisjs/morris.css" rel="stylesheet">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Trang chủ</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <i class="fa fa-person fa-5x"></i>
+                            <div>Quản lý phụ huynh, học sinh</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/Students/Index">
+                    <div class="panel-footer">
+                        <span class="pull-left">Vào quản lý</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
+                            <div>Quản lý đưa/đón học sinh</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">Vào quản lý</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <i class="fa fa-group fa-5x"></i>
+                            <div>Quản lý điểm danh</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/Attendance/Index">
+                    <div class="panel-footer">
+                        <span class="pull-left">Vào quản lý</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <i class="fa fa-address-card fa-5x" aria-hidden="true"></i>
+                            <div>Quản lý thẻ RFID</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">Vào quản lý</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Thống kê lượt tương tác thẻ RFID
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Bộ lọc
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="#">Ngày hôm nay</a>
+                                </li>
+                                <li>
+                                    <a href="#">Theo tuần</a>
+                                </li>
+                                <li>
+                                    <a href="#">Theo tháng</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div id="morris-area-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bell fa-fw"></i> Thông báo
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-notification fa-fw"></i> 1 Lớp vừa điểm danh
+                            <span class="pull-right text-muted small">
+                                <em>4 phút trước</em>
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-notification fa-fw"></i> 3 phòng bắt đầu thi
+                            <span class="pull-right text-muted small">
+                                <em>12 phút trước</em>
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-notification fa-fw"></i> 1 tin nhắn đã gửi
+                            <span class="pull-right text-muted small">
+                                <em>27 phút trước</em>
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-notification fa-fw"></i> Giờ học sinh ra về
+                            <span class="pull-right text-muted small">
+                                <em>11:43 Sáng</em>
+                            </span>
+                        </a>
+                    </div>
+                    <!-- /.list-group -->
+                    <a href="#" class="btn btn-default btn-block">Xem thêm</a>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+            <!-- /.panel -->
+
+        </div>
+        <!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
+
+    <script src="/Assets/vendor/jquery/jquery.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/Assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/Assets/vendor/metisMenu/metisMenu.min.js"></script>
+    <!-- Morris Charts JavaScript -->
+    <script src="/Assets/vendor/raphael/raphael.min.js"></script>
+    <script src="/Assets/vendor/morrisjs/morris.min.js"></script>
+    <script src="/Assets/data/morris-data.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/Assets/dist/js/sb-admin-2.js"></script>

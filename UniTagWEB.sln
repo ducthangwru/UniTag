@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTagWEB", "UniTagWEB\UniTagWEB.csproj", "{7E8FC10F-37E0-4E09-87B6-5059A03550F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTagDataAccess", "UniTagDataAccess\UniTagDataAccess.csproj", "{FB169BF3-C878-4D76-9090-02EDAF68017E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E8FC10F-37E0-4E09-87B6-5059A03550F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8FC10F-37E0-4E09-87B6-5059A03550F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8FC10F-37E0-4E09-87B6-5059A03550F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8FC10F-37E0-4E09-87B6-5059A03550F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB169BF3-C878-4D76-9090-02EDAF68017E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB169BF3-C878-4D76-9090-02EDAF68017E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB169BF3-C878-4D76-9090-02EDAF68017E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB169BF3-C878-4D76-9090-02EDAF68017E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

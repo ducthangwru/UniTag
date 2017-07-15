@@ -1,0 +1,5 @@
+C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\bin\Release\UniTagDataAccess.dll
+C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\bin\Release\UniTagDataAccess.pdb
+C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Release\UniTagDataAccess.dll
+C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Release\UniTagDataAccess.pdb
+C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Release\UniTagDataAccess.csprojResolveAssemblyReference.cache

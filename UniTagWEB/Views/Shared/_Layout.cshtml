@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Phần mềm UniTag</title>
+
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/menubar.css" rel="stylesheet" />
+    <link href="~/assets/themes/admin/layout.css" rel="stylesheet" />
+
+    <link href="~/Content/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo.material.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo.material.mobile.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo.rtl.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/kendo.all.min.js"></script>
+    <script src="~/assets/widgets/screenfull/screenfull.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Site.js"></script>
+
+
+    <link href="~/Assets/customstyle/customstyle.css" rel="stylesheet" />
+    <!-- Bootstrap Core CSS -->
+    <!-- Custom Style-->
+    <link href="~/Assets/customstyle/customstyle.css" rel="stylesheet" />
+    <!-- Bootstrap Core CSS -->
+    <link href="/Assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MetisMenu CSS -->
+    <link href="/Assets/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/Assets/dist/css/sb-admin-2.css" rel="stylesheet">
+    <!-- Morris Charts CSS -->
+    <link href="/Assets/vendor/morrisjs/morris.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="/Assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/animate.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/backgrounds.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/boilerplate.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/border-radius.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/grid.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/spacing.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/typography.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/utils.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/colors.css">
+    <!-- ELEMENTS -->
+
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/badges.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/content-box.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/dashboard-box.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/forms.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/images.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/tables.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/elements/tile-box.css">
+
+    <!-- ICONS -->
+    <link rel="stylesheet" type="text/css" href="../../assets/icons/fontawesome/fontawesome.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/icons/linecons/linecons.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/icons/spinnericon/spinnericon.css">
+
+    <!-- WIDGETS -->
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/calendar/calendar.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/charts/piegage/piegage.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/dropdown/dropdown.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/input-switch/inputswitch.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/input-switch/inputswitch-alt.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/modal/modal.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/popover/popover.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/progressbar/progressbar.css">
+
+    <link rel="stylesheet" type="text/css" href="../../assets/widgets/theme-switcher/themeswitcher.css">
+    <!-- SNIPPETS -->
+
+    <link rel="stylesheet" type="text/css" href="../../assets/snippets/chat.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/snippets/files-box.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/snippets/login-box.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/snippets/notification-box.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/snippets/progress-box.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/snippets/mobile-navigation.css">
+
+    <!-- Admin theme -->
+
+    <link rel="stylesheet" type="text/css" href="../../assets/themes/admin/layout.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/themes/admin/color-schemes/default.css">
+
+    <!-- Components theme -->
+
+    <link rel="stylesheet" type="text/css" href="../../assets/themes/components/default.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/themes/components/border-radius.css">
+
+    <!-- Admin responsive -->
+
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/responsive-elements.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/helpers/admin-responsive.css">
+
+    <script>
+        $(document).ready(function () {
+            var trigger = $('.hamburger'),
+                overlay = $('.overlay'),
+               isClosed = false;
+
+            trigger.click(function () {
+                hamburger_cross();
+            });
+
+            function hamburger_cross() {
+
+                if (isClosed == true) {
+                    overlay.hide();
+                    trigger.removeClass('is-open');
+                    trigger.addClass('is-closed');
+                    isClosed = false;
+                } else {
+                    overlay.show();
+                    trigger.removeClass('is-closed');
+                    trigger.addClass('is-open');
+                    isClosed = true;
+                }
+            }
+
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="overlay"></div>
+
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="/Home/Index">
+                        <img src="~/assets/image-resources/logo-lachong.png" style="height:42px;" />
+                    </a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title">   Quản lý học sinh </b><b class="b-caret"><span class="caret"></span></b> </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="/Students/Index">Danh sách học sinh</a></li>
+                        <li><a href="#">Danh sách phụ huynh</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title">   Quản lý học tập</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Quản lý lớp học</a></li>
+                        <li><a href="#">Quản lý môn học</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title">   Quản lý giáo viên</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Danh sách giáo viên</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title"> Quản lý điểm danh</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="/Attendance/Index">Thông tin điểm danh</a></li>
+                        <li><a href="#">Lịch điểm danh</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title"> Quản lý đưa đón</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Thông tin đưa đón học sinh</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title"> Quản lý nhân viên</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Danh sách nhân viên</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title"> Quản lý thẻ RFID</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Báo mất thẻ</a></li>
+                        <li><a href="#">Cấp quyền thẻ</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-wrench"></span>
+                        <b class="b-title"> Dịch vụ căng tin</b><b class="b-caret"><span class="caret"></span></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Danh sách đồ ăn</a></li>
+                        <li><a href="#">Thanh toán</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span>
+                    <b class="b-title">   Phân quyền quản trị</b><b class="b-caret"><span class="caret"></span></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Chức năng:</li>
+                        <li><a href="#">Phân quyền</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="page-header" style="position:fixed; z-index:150; width:100%;height:64px;background-color:#676e94;top:0;    background: #1A237E; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left top, #1A237E, #5C6BC0); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, #1A237E, #5C6BC0); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, #1A237E, #5C6BC0); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, #1A237E, #5C6BC0); /* Standard syntax (must be last) */">
+            <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
+            <div id="header-nav-right">
+
+                <a onclick="fullscreen()" href="javascript:void(0);" class="hdr-btn" id="fullscreen-btn" title="Toàn bộ màn hình">
+                    <i class="glyph-icon icon-arrows-alt"></i>
+                </a>
+
+                <div class="dropdown" id="notifications-btn"></div>
+                <div class="dropdown" id="messages-btn"></div>
+                <a class="header-btn" id="logout-btn" href="/Login/Index" title="Đăng xuất">
+                    <i class="glyph-icon icon-linecons-lock"></i>
+                </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+
+            <div>
+
+                <div class="container">
+                   @RenderBody()
+                </div>
+                <hr />
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+</body>
+</html>
