@@ -30,11 +30,17 @@ namespace UniTagDataAccess.DataAccess.App
                     HocSinhCheckinAppOBJ obj = new HocSinhCheckinAppOBJ();
                     obj.idCheck = long.Parse(dr["ID"].ToString());
                     obj.idHocSinh = int.Parse(dr["IDHocSinh"].ToString());
-                    obj.idImage = int.Parse(dr["IDImage"].ToString());
                     obj.NgaySinh = DateTime.Parse(dr["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
                     obj.Ten = dr["Ten"].ToString();
                     obj.GioiTinh = dr["GioiTinh"].ToString();
                     obj.XacNhan = Boolean.Parse((dr["XacNhan"]).ToString());
+                    int idImage = int.Parse(dr["IDImage"].ToString());
+                    DataRow dr1 = db.ExecuteDataSet("sp_AppUniTag_GetThongTinAnhTheoID", new SqlParameter("@idimage", idImage)).Tables[0].Rows[0];
+                    obj.image = new ImageAppOBJ();
+                    obj.image.ID = long.Parse(dr1["ID"].ToString());
+                    obj.image.NgayTao = dr1["NgayTao"].ToString();
+                    obj.image.Path = dr1["Path"].ToString();
+                    obj.image.ThoiGianChup = dr1["ThoiGianChup"].ToString();
                     OBJ.Add(obj);
                 }
                 return OBJ;

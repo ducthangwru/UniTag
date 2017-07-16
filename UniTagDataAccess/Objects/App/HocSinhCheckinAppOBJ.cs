@@ -10,7 +10,7 @@ namespace UniTagDataAccess.Objects.App
     {
         public long idCheck { get; set; }
         public int idHocSinh { get; set; }
-        public int idImage { get; set; }
+        public ImageAppOBJ image { get; set; }
         public string Ten { get; set; }
         public string NgaySinh { get; set; }
         public string GioiTinh { get; set; }
