@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniTagDataAccess.Utils;
 using UniTagDataAccess.Objects.App;
 
 namespace UniTagDataAccess.DataAccess.App
@@ -38,9 +39,9 @@ namespace UniTagDataAccess.DataAccess.App
                     DataRow dr1 = db.ExecuteDataSet("sp_AppUniTag_GetThongTinAnhTheoID", new SqlParameter("@idimage", idImage)).Tables[0].Rows[0];
                     obj.image = new ImageAppOBJ();
                     obj.image.ID = long.Parse(dr1["ID"].ToString());
-                    obj.image.NgayTao = dr1["NgayTao"].ToString();
-                    obj.image.Path = dr1["Path"].ToString();
-                    obj.image.ThoiGianChup = dr1["ThoiGianChup"].ToString();
+                    obj.image.NgayTao = DateTime.Parse(dr1["NgayTao"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    obj.image.Path = Utils.Utils.BASEURL + dr1["Path"].ToString();
+                    obj.image.ThoiGianChup = DateTime.Parse(dr1["ThoiGianChup"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
                     OBJ.Add(obj);
                 }
                 return OBJ;
