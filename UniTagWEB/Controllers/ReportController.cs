@@ -42,7 +42,7 @@ namespace UniTagWEB.Controllers
         {
             try
             {
-                List<CaCheckinAppOBJ> list = CaCheckinAppDB.DanhSachCaTheoNgay(ngay, idlop);
+                List<CaCheckinAppOBJ> list = CaCheckinDB.DanhSachCaTheoNgay(ngay, idlop);
                 return Request.CreateResponse(HttpStatusCode.OK, list);
             }
             catch (Exception ex)

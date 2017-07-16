@@ -10,7 +10,7 @@ using UniTagDataAccess.Objects.App;
 
 namespace UniTagDataAccess.DataAccess.App
 {
-    public class CaCheckinAppDB
+    public class CaCheckinDB
     {
         public static SqlDataHelpers db = new SqlDataHelpers();
         public static List<CaCheckinAppOBJ> DanhSachCaTheoNgay(string date, int idlop)

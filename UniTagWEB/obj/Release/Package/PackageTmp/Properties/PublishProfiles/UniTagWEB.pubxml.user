@@ -916,10 +916,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/28/2015 04:04:30</publishTime>
     </File>
     <File Include="bin/UniTagDataAccess.dll">
-      <publishTime>07/14/2017 17:00:33</publishTime>
+      <publishTime>07/14/2017 23:08:31</publishTime>
     </File>
     <File Include="bin/UniTagWEB.dll">
-      <publishTime>07/14/2017 17:00:38</publishTime>
+      <publishTime>07/14/2017 23:08:35</publishTime>
     </File>
     <File Include="Content/bootstrap.css">
       <publishTime>07/12/2017 11:57:58</publishTime>
@@ -1084,7 +1084,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/14/2017 04:36:55</publishTime>
     </File>
     <File Include="Properties/PublishProfiles/UniTagWEB.pubxml.user">
-      <publishTime>07/14/2017 17:01:00</publishTime>
+      <publishTime>07/14/2017 17:01:47</publishTime>
     </File>
     <File Include="Scripts/bootbox.min.js">
       <publishTime>07/12/2017 10:59:42</publishTime>

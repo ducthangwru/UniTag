@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess\App\CaCheckinAppDB.cs" />
+    <Compile Include="DataAccess\App\CaCheckinDB.cs" />
     <Compile Include="DataAccess\App\CaDuaDonDB.cs" />
     <Compile Include="DataAccess\App\CheckinAppDB.cs" />
     <Compile Include="DataAccess\App\HocSinhAppDB.cs" />
