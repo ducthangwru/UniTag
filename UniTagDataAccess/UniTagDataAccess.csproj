@@ -53,6 +53,10 @@
     <Compile Include="DataAccess\App\NgayCheckinAppDB.cs" />
     <Compile Include="DataAccess\App\PhuHuynhAppDB.cs" />
     <Compile Include="DataAccess\App\TaiKhoanAppDB.cs" />
+    <Compile Include="DataAccess\Web\CheckinWebDB.cs" />
+    <Compile Include="DataAccess\Web\HocSinhWebDB.cs" />
+    <Compile Include="DataAccess\Web\ImagesWebDB.cs" />
+    <Compile Include="DataAccess\Web\PhuHuynhWebDB.cs" />
     <Compile Include="ObjectRequest\CheckinRequestOBJ.cs" />
     <Compile Include="Objects\App\CaCheckinAppOBJ.cs" />
     <Compile Include="Objects\App\CaDuaDonAppOBJ.cs" />
@@ -64,6 +68,9 @@
     <Compile Include="Objects\App\NgayCheckinAppOBJ.cs" />
     <Compile Include="Objects\App\PhuHuynhAppOBJ.cs" />
     <Compile Include="Objects\App\TaiKhoanAppOBJ.cs" />
+    <Compile Include="Objects\Web\CheckinWebOBJ.cs" />
+    <Compile Include="Objects\Web\HocSinhWebOBJ.cs" />
+    <Compile Include="Objects\Web\PhuHuynhWebOBJ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\SqlDataHelpers.cs" />
     <Compile Include="Utils\Utils.cs" />

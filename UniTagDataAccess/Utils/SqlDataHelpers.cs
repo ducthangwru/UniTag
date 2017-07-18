@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
+using UniTagDataAccess.Utils;
 
 namespace SERVER_ADEN.DataAccess
 {
@@ -30,7 +31,7 @@ namespace SERVER_ADEN.DataAccess
             //  string uid = ConfigurationManager.AppSettings["Username"];
             //  string pwd = ConfigurationManager.AppSettings["Password"];
             // return "Server=" + sv + ";Database=" + db + ";User ID=" + uid + ";Password=" + pwd + ";Max Pool Size = 150;";
-            string ConnectionString = WebConfigurationManager.AppSettings["ConnectionString"];
+            string ConnectionString = Utils.Decrypt(WebConfigurationManager.AppSettings["ConnectionString"]);
             return ConnectionString;
 
         }

@@ -71,12 +71,12 @@ namespace UniTagWEB.Controllers
             }
         }
         [HttpGet]
-        public HttpResponseMessage getDanhSachCheckinTheoCa([FromUri]string ngay, [FromUri] int idlop, [FromUri] int idca)
+        public HttpResponseMessage getDanhSachCheckinTheoCa([FromUri]string ngay, [FromUri] int idlop, [FromUri] int idca, [FromUri] string timkiem)
         {
             ThongTinGetHocSinhCheckin obj = new ThongTinGetHocSinhCheckin();
             try
             {
-                obj.dshs = HocSinhCheckinAppDB.DanhSachHocSinhCheckinTheoCa(ngay, idlop, idca);
+                obj.dshs = HocSinhCheckinAppDB.DanhSachHocSinhCheckinTheoCa(ngay, idlop, idca, timkiem);
                 if (obj.dshs.Count > 0)
                 {
                     obj.status = true;

@@ -15,7 +15,7 @@ namespace UniTagDataAccess.DataAccess.App
     public  class HocSinhCheckinAppDB
     {
         public static SqlDataHelpers db = new SqlDataHelpers();
-        public static List<HocSinhCheckinAppOBJ> DanhSachHocSinhCheckinTheoCa(string NgaySql, int idLop, int idCa)
+        public static List<HocSinhCheckinAppOBJ> DanhSachHocSinhCheckinTheoCa(string NgaySql, int idLop, int idCa, string timkiem)
         {
             List<HocSinhCheckinAppOBJ> OBJ = new List<HocSinhCheckinAppOBJ>();
             try
@@ -23,7 +23,8 @@ namespace UniTagDataAccess.DataAccess.App
                 SqlParameter[] param = new SqlParameter[]{
                     new SqlParameter("@date", NgaySql),
                     new SqlParameter("@idlop", idLop),
-                    new SqlParameter("@idca", idCa)
+                    new SqlParameter("@idca", idCa),
+                    new SqlParameter("@timkiem", timkiem)
                 };
                 DataTable dt = db.ExecuteDataSet("sp_AppUniTag_DanhSachHocSinhCheckinTheoCa", param).Tables[0];
                 foreach (DataRow dr in dt.Rows)

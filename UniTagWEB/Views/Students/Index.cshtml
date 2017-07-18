@@ -6,26 +6,67 @@
 <h2 style="margin-top:10px;">Danh sách học sinh</h2>
 <div id="example" style="margin-top:30px;">
     <div id="grid"></div>
-    <script>
+
+</div>
+
+<script>
         $(document).ready(function () {
-            $("#grid").kendoGrid({
-                dataSource: {
-                    data: datastudent,                    pageSize: 10
+            dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {                        
+                            url: '@Url.Action("DanhSachHS", "Students")',
+                            dataType: 'jsonp',
+                            success: function (msg) {
+                                options.success(msg.d);
+                            }
+                    },
+                    create: {
+                        url: '@Url.Action("InsertOrUpdateHocSinh", "Students")',
+                        dataType: 'jsonp',
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation !== "read" && options.models) {
+                            return { models: kendo.stringify(options.models) };
+                        }
+                    }
                 },
+                batch: true,
+                pageSize: 10, 
+                schema: {
+                    model: {
+                        id: "ID",
+                        fields: {
+                            ID: { type: "number" },
+                            IDImage: { type: "number" },
+                            Ten: { type: "string" },
+                            NgaySinh: { type: "string" },
+                            GioiTinh: { type: "string" },
+                            DiaChi: { type: "string" },
+                            Path: { type: "string" },
+                            Lop: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
                 height: 550,
                 groupable: {
                     messages: {
                         empty: "Kéo cột vào đây để nhóm "
                     }
                 },
+                toolbar: [{ name: "create", text: "Thêm mới" }],
                 sortable: true,
                 pageable: {
                     refresh: true,
                     pageSizes: [5, 10, 15, "Tất cả"],
                     buttonCount: 5,
                     messages: {
-                        itemsPerPage: "số học sinh trên trang",
-                        display: "Hiển thị {0}-{1} của {2} học sinh",
+                        itemsPerPage: "số trẻ trên trang",
+                        display: "Hiển thị {0}-{1} của {2} trẻ",
                         empty: "Không có dữ liệu",
                         allPages: "Hiển thị tất cả",
                         page: "Nhập trang",
@@ -37,40 +78,63 @@
                         refresh: "Làm mới"
                     }
                 },
-                columns: [{
+                columns: [
+                    {
+                        title: "STT",
+                        template: "#= ++record #",
+                        width: '5%'
+                    },
+                    {
                     template: "<div class='customer-photo'" +
-                                    "style='background-image: url(../content/web/Customers/#:data.CustomerID#.jpg);'></div>" +
-                                "<div class='customer-name'>#: ContactName #</div>",
-                    field: "ContactName",
+                                    "style='background-image: url(#:Path#);'></div>" +
+                                "<div class='customer-name'>#: Ten #</div>",
+                    field: "Ten",
                     title: "Họ và Tên",
-                    width: 240
+                    width: '20%'
                 }, {
-                    field: "ContactTitle",
-                    title: "Địa chỉ"
+                    field: "NgaySinh",
+                    title: "Ngày sinh",
+                    width: '10%'
                 }, {
-                    field: "Address",
-                    title: "Mã thẻ RFID"
+                    field: "GioiTinh",
+                    title: "Giới tính",
+                    width: '10%'
                 }, {
-                    field: "CompanyName",
+                    field: "Lop",
                     title: "Lớp",
-                    width: 150
+                    width: '10%'
                 },
                 { command: [{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
+                , editable: "popup",
+                dataBinding: function () {
+                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                },
+                edit: function (e) {
+                    console.log(e);
+                    if (e.model.id == 0) {
+                        e.container.kendoWindow("title", "Tạo mới");
+                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
+                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                    } else {
+                        e.container.kendoWindow("title", "Chỉnh sửa");
+                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
+                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                    }
+                }
             });
         });
-    </script>
-</div>
+</script>
 
 <style type="text/css">
     .customer-photo {
         display: inline-block;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background-size: 32px 35px;
+        width: 80px;
+        height: 100px;
+        border-radius: 0%;
+        background-size: 80px 100px;
         background-position: center center;
         vertical-align: middle;
-        line-height: 32px;
+        line-height: 100px;
         box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
         margin-left: 5px;
     }

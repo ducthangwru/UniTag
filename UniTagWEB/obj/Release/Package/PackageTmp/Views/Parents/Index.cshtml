@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/data/Data.js"></script>
+<h2 style="margin-top:10px;">Danh sách phụ huynh</h2>
+<div id="example" style="margin-top:30px;">
+    <div id="grid"></div>
+
+</div>
+
+<script>
+        $(document).ready(function () {
+            dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                            url: '@Url.Action("DanhSachPH", "Parents")',
+                            dataType: 'jsonp',
+                            success: function (msg) {
+                                options.success(msg.d);
+                            }
+                    },
+                    create: {
+                        url: '@Url.Action("InsertHocSinh", "Students")',
+                        dataType: 'jsonp',
+                    },
+                    destroy: {
+                        success: function (msg) {
+                            console.log(msg);
+                            options.success(msg.d);
+                        },
+                        error: function (msg) {
+                            console.log(msg);
+                        }
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation !== "read" && options.models) {
+                            return { models: kendo.stringify(options.models) };
+                        }
+                    }
+                },
+                batch: true,
+                pageSize: 10,
+                schema: {
+                    model: {
+                        id: "ID",
+                        fields: {
+                            ID: { type: "number" },
+                            IDThe : {type: "string"},
+                            IDImage: { type: "number" },
+                            IDMoiQuanHe: { type: "number" },
+                            TenPhuHuynh: { type: "string" },
+                            TenMoiQuanHe: { type: "string" },
+                            NgaySinh: { type: "string" },
+                            GioiTinh: { type: "string" },
+                            DiaChi: { type: "string" },
+                            Path: { type: "string" },
+                            isActive: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                height: 550,
+                groupable: {
+                    messages: {
+                        empty: "Kéo cột vào đây để nhóm "
+                    }
+                },
+                toolbar: [{ name: "create", text: "Thêm mới" }],
+                sortable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: [5, 10, 15, "Tất cả"],
+                    buttonCount: 5,
+                    messages: {
+                        itemsPerPage: "số phụ huynh trên trang",
+                        display: "Hiển thị {0}-{1} của {2} phụ huynh",
+                        empty: "Không có dữ liệu",
+                        allPages: "Hiển thị tất cả",
+                        page: "Nhập trang",
+                        of: "của {0}",
+                        first: "Trang đầu",
+                        previous: "Trang trước",
+                        next: "Trang kế tiếp",
+                        last: "Trang cuối",
+                        refresh: "Làm mới"
+                    }
+                },
+                columns: [
+                    {
+                        title: "STT",
+                        template: "#= ++record #",
+                        width: '5%'
+                    },
+                    {
+                    template: "<div class='customer-photo'" +
+                                    "style='background-image: url(#:Path#);'></div>" +
+                                "<div class='customer-name'>#: TenPhuHuynh #</div>",
+                    field: "TenPhuHuynh",
+                    title: "Họ và Tên",
+                    width: '20%'
+                }, {
+                    field: "IDThe",
+                    title: "Mã thẻ RFID",
+                    width: '15%'
+                }, {
+                    field: "GioiTinh",
+                    title: "Giới tính",
+                    width: '10%'
+                }, {
+                    field: "NgaySinh",
+                    title: "Ngày sinh",
+                    width: '10%'
+                }, {
+                    field: "isActive",
+                    title: "Trạng thái",
+                    width: '10%'
+                },
+                { command: [{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
+                ,editable: {
+                    mode: "popup",
+                    template: kendo.template($("#popup_editor").html()),
+                    scrollable: false
+                },
+                dataBinding: function () {
+                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                },
+                edit: function (e) {
+                    console.log(e);
+                    if (e.model.id == 0) {
+                        e.container.kendoWindow("title", "Tạo mới");
+                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
+                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                    } else {
+                        e.container.kendoWindow("title", "Chỉnh sửa");
+                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
+                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                    }
+                }
+            });
+        });
+</script>
+
+<style type="text/css">
+    .customer-photo {
+        display: inline-block;
+        width: 80px;
+        height: 100px;
+        border-radius: 0%;
+        background-size: 80px 100px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 100px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
+    }
+
+    .customer-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
+</style>
