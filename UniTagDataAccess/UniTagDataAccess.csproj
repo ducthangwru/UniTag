@@ -52,6 +52,7 @@
     <Compile Include="DataAccess\App\LopHocAppDB.cs" />
     <Compile Include="DataAccess\App\NgayCheckinAppDB.cs" />
     <Compile Include="DataAccess\App\PhuHuynhAppDB.cs" />
+    <Compile Include="DataAccess\App\TaiKhoanAppDB.cs" />
     <Compile Include="ObjectRequest\CheckinRequestOBJ.cs" />
     <Compile Include="Objects\App\CaCheckinAppOBJ.cs" />
     <Compile Include="Objects\App\CaDuaDonAppOBJ.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Objects\App\LopHocAppOBJ.cs" />
     <Compile Include="Objects\App\NgayCheckinAppOBJ.cs" />
     <Compile Include="Objects\App\PhuHuynhAppOBJ.cs" />
+    <Compile Include="Objects\App\TaiKhoanAppOBJ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\SqlDataHelpers.cs" />
     <Compile Include="Utils\Utils.cs" />

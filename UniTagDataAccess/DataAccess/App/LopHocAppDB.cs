@@ -21,9 +21,9 @@ namespace UniTagDataAccess.DataAccess.App
 
             SqlParameter[] param = new SqlParameter[]
             {
-                new SqlParameter("@ca", CaDuaDon),
-                new SqlParameter("@lop", IDLop),
-                new SqlParameter("@thoigian", ThoiGianCheckin)
+                new SqlParameter("@idca", CaDuaDon),
+                new SqlParameter("@idlop", IDLop),
+                new SqlParameter("@date", ThoiGianCheckin)
             };
 
             int sisohientai = int.Parse(db.ExecuteScalar("sp_AppUniTag_ThongTinSiSoTheoCaDuaDon", param).ToString());
@@ -49,7 +49,7 @@ namespace UniTagDataAccess.DataAccess.App
                     obj.ID = int.Parse(dr["ID"].ToString());
                     obj.Lop = dr["Lop"].ToString();
                     obj.SiSo = int.Parse(dr["SiSo"].ToString());
-
+                    obj.MaMau = dr["MaMau"].ToString();
                     ds.Add(obj);
                 }
 

@@ -8,6 +8,12 @@ namespace UniTagDataAccess.Objects.App
 {
     public class ImageAppOBJ
     {
+        public ImageAppOBJ()
+        {
+            Path = "";
+            ThoiGianChup = "";
+            NgayTao = "";
+        }
         public long ID { get; set; }
         public string Path { get; set; }
         public string ThoiGianChup { get; set; }

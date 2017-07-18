@@ -18,11 +18,17 @@ namespace UniTagWEB.Controllers
         [HttpGet]
         public HttpResponseMessage GetThongTinThe(string id)
         {
+            ThongTinGetTheCheckin obj = new ThongTinGetTheCheckin();
             try
             {
-                PhuHuynhAppOBJ obj = PhuHuynhAppDB.GetThongTinPhuHuynhTheoIDThe(id);
-                if (string.IsNullOrEmpty(obj.IDThe))
+                obj.chitiet = PhuHuynhAppDB.GetThongTinPhuHuynhTheoIDThe(id);
+                if (string.IsNullOrEmpty(obj.chitiet.IDThe))
+                {
+                    obj.chitiet = new PhuHuynhAppOBJ();
                     return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                }
+                obj.status = true;
+                obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
 
                 return Request.CreateResponse(HttpStatusCode.OK, obj);
             }
@@ -74,9 +80,9 @@ namespace UniTagWEB.Controllers
                             else
                             {
                                 string date = DateTime.Now.ToString("ddMMyyyyHHmmss");
-                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Images/ImagesCheckin/"), date);
+                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Images/ImagesCheckin/"), date + ext);
                                 file.SaveAs(path);
-                                idimage = ImagesAppDB.InsertImage(path, ThoiGianChup);
+                                idimage = ImagesAppDB.InsertImage("/Images/ImagesCheckin/" + date + ext, ThoiGianChup);
                             }
                         }
                     }
@@ -87,13 +93,14 @@ namespace UniTagWEB.Controllers
 
                 if (CheckinAppDB.InsertCheckin(IDPhuHuynh, IDHocSinh, Lop, idimage, CaDuaDon, XacNhan))
                 {
-                    OBJ.msg = "Thành Công!";
+                    OBJ.status = true;
+                    OBJ.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, OBJ);
                 }
                     
                 else
                 {
-                    OBJ.msg = "Không Thành Công!";
+
                     return Request.CreateResponse(HttpStatusCode.BadRequest, OBJ);
                 }
             }
@@ -105,10 +112,25 @@ namespace UniTagWEB.Controllers
 
         public class ThongTinCheckinOBJ
         {
-            public ThongTinCheckinOBJ() { }
+            public ThongTinCheckinOBJ() {
+                status = false;
+                msg = UniTagDataAccess.Utils.Utils.MSG_ERROR;
+            }
             public string siso { get; set; }
+            public bool status { get; set; }
             public string msg { get; set; }
         }
-
+        public class ThongTinGetTheCheckin
+        {
+            public ThongTinGetTheCheckin()
+            {
+                status = false;
+                msg = UniTagDataAccess.Utils.Utils.MSG_ERROR;
+                chitiet = new PhuHuynhAppOBJ();
+            }
+            public bool status { get; set; }
+            public string msg { get; set; }
+            public PhuHuynhAppOBJ chitiet { get; set; }            
+        }
     }
 }

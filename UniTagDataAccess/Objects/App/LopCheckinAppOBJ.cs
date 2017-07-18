@@ -13,5 +13,6 @@ namespace UniTagDataAccess.Objects.App
         public int SoLuongCheckin { get; set; }
         public int SiSoCheckin { get; set; }
         public string NgaySql { get; set; }
+        public string MaMau { get; set; }
     }
 }

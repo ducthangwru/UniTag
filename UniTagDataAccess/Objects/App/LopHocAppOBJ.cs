@@ -11,5 +11,6 @@ namespace UniTagDataAccess.Objects.App
         public int ID { get; set; }
         public string Lop { get; set; }
         public int SiSo { get; set; }
+        public string MaMau { get; set; }
     }
 }

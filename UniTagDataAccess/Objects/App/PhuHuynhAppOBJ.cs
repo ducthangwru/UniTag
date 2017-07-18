@@ -8,6 +8,18 @@ namespace UniTagDataAccess.Objects.App
 {
     public class PhuHuynhAppOBJ
     {
+        public PhuHuynhAppOBJ()
+        {
+            IDThe = "";
+            TenPhuHuynh = "";
+            DiaChi = "";
+            NgaySinh = "";
+            GioiTinh = "";
+            MoiQuanHe = "";
+            NgayTao = "";
+            Image = new ImageAppOBJ();
+            HocSinh = new List<HocSinhAppOBJ>();
+        }
         public int ID { get; set; }
         public string IDThe { get; set; }
         public int IDImage { get; set; }

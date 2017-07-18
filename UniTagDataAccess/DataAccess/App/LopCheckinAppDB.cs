@@ -29,6 +29,7 @@ namespace UniTagDataAccess.DataAccess.App
                         new SqlParameter("@date", NgaySql),
                         new SqlParameter("@idlop", obj.idLop)
                     };
+                    obj.MaMau = dr["MaMau"].ToString();
                     obj.SoLuongCheckin = int.Parse(db.ExecuteScalar("sp_AppUniTag_SoLuongCheckinTheoLopHoc", param).ToString());
                     SqlParameter[] param1 = new SqlParameter[]{
                         new SqlParameter("@date", NgaySql),
