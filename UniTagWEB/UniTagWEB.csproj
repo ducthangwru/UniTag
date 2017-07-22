@@ -665,10 +665,11 @@
     <Compile Include="Common\JsonpResult.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\CheckinController.cs" />
+    <Compile Include="Controllers\ClassAppController.cs" />
     <Compile Include="Controllers\ClassController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginWebController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\LoginAppController.cs" />
     <Compile Include="Controllers\ReportCheckinController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
@@ -698,7 +699,7 @@
     <Content Include="Views\Attendance\Index.cshtml" />
     <Content Include="Views\Parents\Index.cshtml" />
     <Content Include="Views\ReportCheckin\Index.cshtml" />
-    <Content Include="Views\LoginApp\Index.cshtml" />
+    <Content Include="Views\LoginWeb\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -712,6 +713,7 @@
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />
     <Folder Include="obj\Release\TempPE\" />
     <Folder Include="obj\Release\TransformWebConfig\transformed\Views\" />
+    <Folder Include="Views\Class\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

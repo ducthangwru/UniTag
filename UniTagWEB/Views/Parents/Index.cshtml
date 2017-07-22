@@ -1,7 +1,13 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Quản lý thẻ RFID";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .k-edit-form-container{
+            position: relative;
+    width: 100%;
+    }
+</style>
 <script src="~/data/Data.js"></script>
 <h2 style="margin-top:10px;">Danh sách phụ huynh</h2>
 <div id="example" style="margin-top:30px;">
@@ -10,7 +16,17 @@
 </div>
 
 <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
+            var wnd = $("#ganhs")
+                       .kendoWindow({
+                           title: "Gán mối quan hệ HS - PH",
+                           modal: true,
+                           visible: false,
+                           resizable: false,
+                           width: 500,
+                           height: 100,
+                           scrollable: false,
+                       }).data("kendoWindow");
             dataSource = new kendo.data.DataSource({
                 transport: {
                     read: {
@@ -21,16 +37,39 @@
                             }
                     },
                     create: {
-                        url: '@Url.Action("InsertHocSinh", "Students")',
+                        url: '@Url.Action("Insert", "Parents")',
                         dataType: 'jsonp',
+                        success: function (msg) {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        },
+                        error: function () {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        }
+                    },
+                    update :{
+                        url: '@Url.Action("Update", "Parents")',
+                        dataType: 'jsonp',
+                        success: function (msg) {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        },
+                        error: function () {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        }
                     },
                     destroy: {
+                        url: '@Url.Action("Delete", "Parents")',
+                        dataType: 'jsonp',
                         success: function (msg) {
-                            console.log(msg);
-                            options.success(msg.d);
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
                         },
-                        error: function (msg) {
-                            console.log(msg);
+                        error: function () {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
                         }
                     },
                     parameterMap: function (options, operation) {
@@ -45,17 +84,17 @@
                     model: {
                         id: "ID",
                         fields: {
-                            ID: { type: "number" },
-                            IDThe : {type: "string"},
-                            IDImage: { type: "number" },
-                            IDMoiQuanHe: { type: "number" },
-                            TenPhuHuynh: { type: "string" },
-                            TenMoiQuanHe: { type: "string" },
-                            NgaySinh: { type: "string" },
-                            GioiTinh: { type: "string" },
-                            DiaChi: { type: "string" },
-                            Path: { type: "string" },
-                            isActive: { type: "string" }
+                            ID: { editable: false, nullable: false, defaultValue: 0 },
+                            IDThe: { editable: true, nullable: false },
+                            IDImage: { editable: false, nullable: true },
+                            IDMoiQuanHe: { editable: true, nullable: false },
+                            TenPhuHuynh: { editable: true, nullable: false },
+                            TenMoiQuanHe: { editable: true, nullable: false },
+                            NgaySinh: { editable: true, nullable: false},
+                            GioiTinh: { editable: true, nullable: false },
+                            DiaChi: { editable: true, nullable: false },
+                            Path: { teditable: true, nullable: true },
+                            isActive: { editable: true, nullable: true }
                         }
                     }
                 }
@@ -70,7 +109,7 @@
                         empty: "Kéo cột vào đây để nhóm "
                     }
                 },
-                toolbar: [{ name: "create", text: "Thêm mới" }],
+                toolbar: kendo.template($("#toolbarloc").html()),
                 sortable: true,
                 pageable: {
                     refresh: true,
@@ -110,6 +149,7 @@
                 }, {
                     field: "GioiTinh",
                     title: "Giới tính",
+                    filterable: true,
                     width: '10%'
                 }, {
                     field: "NgaySinh",
@@ -120,11 +160,75 @@
                     title: "Trạng thái",
                     width: '10%'
                 },
-                { command: [{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
+                { command: [{
+                    text: "Gán", click: function (e)
+                    {
+                        e.preventDefault();
+
+                        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                        $("#idphuhuynh").val(dataItem.ID);
+                        var wnd = $("#ganhs")
+                           .kendoWindow({
+                               title: "Gán mối quan hệ HS - PH",
+                               modal: true,
+                               visible: false,
+                               resizable: false,
+                               width: 500,
+                               height: 100,
+                               scrollable: false,
+                           }).data("kendoWindow");
+                        wnd.center().open();
+
+                        $("#idlop").kendoComboBox({
+                            emptyText: "",
+                            dataTextField: "Lop",
+                            dataValueField: "IDLop",
+                            dataSource: {
+                                transport: {
+                                    read: {
+                                        url: "/Parents/DanhSachLop",
+                                        dataType: 'jsonp',
+                                        success: function (msg) {
+                                            options.success(msg.d);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                       
+                        console.log($("#idlop").data("kendoComboBox").value());
+
+                        $("#idhocsinh").kendoComboBox({
+                            emptyText: "",
+                            dataTextField: "TenHocSinh",
+                            dataValueField: "IDHocSinh",
+                            dataSource: {
+                                transport: {
+                                    read: {
+                                        url: "/Parents/DanhSachHocSinh",
+                                        dataType: 'jsonp',
+                                        success: function (msg) {
+                                            options.success(msg.d);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        $("#idlop").data("kendoComboBox").value("");
+                        $("#idhocsinh").data("kendoComboBox").value("");
+
+                    }
+                    },{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
                 ,editable: {
                     mode: "popup",
                     template: kendo.template($("#popup_editor").html()),
-                    scrollable: false
+                    window:{
+                        scrollable: false,
+                        width: "800px",
+                        form:{
+                            width:"100%"
+                        }
+                    }
                 },
                 dataBinding: function () {
                     record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
@@ -140,9 +244,200 @@
                         e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
                         e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
                     }
+                    
+                    $("#gioitinh").kendoComboBox();
+
+                    $("#moiqh").kendoComboBox({
+                        emptyText: " ",
+                        dataTextField: "TenMoiQuanHe",
+                        dataValueField: "ID",
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: '@Url.Action("DanhSachMoiQH", "Parents")',
+                                    dataType: 'jsonp',
+                                    success: function (msg) {
+                                        options.success(msg.d);
+                                    }
+                                },
+                            }
+                        }
+                    });
+
+                    $("#datepicker").kendoDatePicker({
+                        format: "dd/MM/yyyy",
+                        parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
+                        dateInput: true
+                    });
                 }
             });
+    });
+
+    function submitganhs() {
+        var idph = $("#idphuhuynh").val();
+        var idhs = $("#idhocsinh").data("kendoComboBox").value();
+
+        var data = {
+            "ID_PhuHuynh": idphuhuynh,
+            "ID_HocSinh": idhocsinh
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/Parents/GanHocSinh",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: Sys.Serialization.JavaScriptSerializer.serialize(data),
+            success: function (msg) {
+                if (msg.d) {
+                    $("#ganhs").data("kendoWindow").close();
+                    bootbox.alert({
+                        message: "Gán thành công!"
+                    })
+                }
+                else {
+                    $("#ganhs").data("kendoWindow").close();
+                    bootbox.alert({
+                        message: "Gán không thành công!"
+                    })
+                }
+            }
         });
+    }
+    function cancelganhs() {
+        $("#ganhs").data("kendoWindow").close();
+    }
+
+   //function importexcel() {
+    //    //$("#import").kendoUpload();
+    //}
+</script>
+
+
+<div id="ganhs">
+    <input type="hidden" id="idphuhuynh" />
+    <div class="row" style="margin-left: 5px; margin-bottom:30px">
+        <div class="col-sm-4" style="margin-top: 5px">
+            <label> Lớp: </label>
+        </div>
+        <div class="col-sm-4">
+            <input id="idlop" placeholder="Chọn lớp..." style="width: 88%" />
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: 5px; margin-bottom:30px">
+        <div class="col-sm-4" style="margin-top: 5px">
+            <label> Chọn học sinh: </label>
+        </div>
+        <div class="col-sm-4">
+            <input id="idhocsinh" placeholder="Chọn học sinh..." style="width: 88%" />
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <a id="submit" onclick="submitganhs()" class="k-button k-button-icontext k-primary k-grid-update">Gán</a>
+        <a id="cancel" onclick="cancelganhs()" class="k-button k-button-icontext k-primary k-grid-update">Hủy</a>
+    </div>
+</div>
+
+
+<script type="text/x-kendo-template" id="toolbarloc">`
+    <div class="row" style="margin-left: 5px">
+        <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
+        <label>Tên:</label>
+        <input class="k-textbox" style="height:2.13em;" />
+    </div>
+</script>
+
+<div style="text-align:center"><input name="import" id="import" type="file" aria-label="files" /></div>
+
+<script id="popup_editor" type="text/x-kendo-template">
+    <p>
+        <div class="row" style="text-align:center; margin-bottom:10px">
+            <div class='customer-photo2' 
+                 style='background-image: url(#:Path#);'>
+            </div>
+        </div>
+
+        <div class="row" style="text-align:center; margin-bottom:10px">
+            <div><input name="files" id="files" type="file" aria-label="files" /></div>
+        </div>
+    </p>
+
+    <p>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
+                <label> Tên phụ huynh: </label>
+            </div>
+            <div class="col-sm-4">
+                <input class="k-textbox" style="width:230px;" data-bind="value: TenPhuHuynh" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
+                <label> Mã thẻ RFID: </label>
+            </div>
+            <div class="col-sm-4">
+                <input class="k-textbox" style="width:230px;" data-bind="value: IDThe" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
+                <label> Ngày sinh: </label>
+            </div>
+            <div class="col-sm-4">
+                <input id="datepicker" data-bind="value: NgaySinh"  value="10/10/2011"  style="width: 93%" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
+                <label> Địa Chỉ: </label>
+            </div>
+            <div class="col-sm-4">
+                <input class="k-textbox" style="width:230px;" data-bind="value: DiaChi" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
+                <label> Giới tính: </label>
+            </div>
+            <div class="col-sm-4">
+                <select id="gioitinh" placeholder="Chọn giới tính..." style="width: 93%;">
+                    <option>Nam</option>
+                    <option>Nữ</option>
+                    <option>Khác</option>
+                </select>
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 5px">
+                <label> Mối quan hệ: </label>
+            </div>
+            <div class="col-sm-4">
+                <input id="moiqh" data-bind="value: IDMoiQuanHe" placeholder="Chọn mối quan hệ..." style="width: 93%" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <input class="k-textbox" data-bind="value: IDPhuHuynh" data-source="dataSource" type="hidden" />
+    </p>
+
 </script>
 
 <style type="text/css">
@@ -159,10 +454,30 @@
         margin-left: 5px;
     }
 
+     .customer-photo2 {
+        display: inline-block;
+        width: 120px;
+        height: 150px;
+        border-radius: 0%;
+        background-size: 120px 150px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 150px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
+    }
+
     .customer-name {
         display: inline-block;
         vertical-align: middle;
         line-height: 32px;
         padding-left: 3px;
     }
+</style>
+
+<style>
+input.k-textbox
+{
+    height: 3.13em;
+}
 </style>

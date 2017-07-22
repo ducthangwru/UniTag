@@ -1,41 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using UniTagDataAccess.DataAccess.App;
-using UniTagDataAccess.Objects.App;
+using System.Web;
+using System.Web.Mvc;
+using UniTagDataAccess.DataAccess.Web;
+using UniTagDataAccess.Objects.Web;
+using UniTagWEB.Common;
 
 namespace UniTagWEB.Controllers
 {
-    [RoutePrefix("api/class")]
-    public class ClassController : ApiController
+    public class ClassController : Controller
     {
-        [HttpGet]
-        public HttpResponseMessage DanhSachLopHoc()
+        // GET: Class
+        public ActionResult Index()
         {
-            OBJ obj = new OBJ();
-            obj.dslop = LopHocAppDB.DanhSachLopHoc();
-            if(obj.dslop.Count > 0)
-            {
-                obj.status = true;
-                obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
-                return Request.CreateResponse(HttpStatusCode.OK, obj);
-            }
+            return View();
+        }
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
-        }
-    }
-    public class OBJ{
-        public OBJ()
+        public JsonResult DanhSachLop()
         {
-            status = false;
-            msg = UniTagDataAccess.Utils.Utils.MSG_ERROR;
-            dslop = new List<LopHocAppOBJ>();
+            IEnumerable<ClassWebOBJ> model = new List<ClassWebOBJ>();
+            model = ClassWebDB.DanhSachLopHoc();
+            return this.Jsonp(model);
         }
-        public bool status { get; set; }
-        public string msg { get; set; }
-        public List<LopHocAppOBJ> dslop { get; set; }
     }
 }

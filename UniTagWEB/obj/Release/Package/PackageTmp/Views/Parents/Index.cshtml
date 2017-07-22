@@ -140,9 +140,99 @@
                         e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
                         e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
                     }
+
+                    $("#gioitinh").kendoComboBox();
+                    $("#moiqh").kendoComboBox({
+                        emptyText: "",
+                        dataTextField: "TenMoiQuanHe",
+                        dataValueField: "ID",
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: '@Url.Action("DanhSachMoiQH", "Parents")',
+                                    dataType: 'jsonp',
+                                    success: function (msg) {
+                                        options.success(msg.d);
+                                    }
+                                },
+                            }
+                        }
+                    });
                 }
             });
         });
+</script>
+
+
+<script id="popup_editor" type="text/x-kendo-template">
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Tên phụ huynh: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: TenPhuHuynh" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Mã thẻ RFID: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: IDThe" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Ngày sinh: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: NgaySinh" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Địa Chỉ: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: DiaChi" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Giới tính: </label>
+            </div>
+            <div class="col-sm-6">
+                <select id="gioitinh" placeholder="Chọn giới tính..." style="width: 88%;">
+                    <option>Nam</option>
+                    <option>Nữ</option>
+                    <option>Khác</option>
+                </select>
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Mối quan hệ: </label>
+            </div>
+            <div class="col-sm-6">
+                <input id="moiqh" data-bind="value: TenMoiQuanHe" placeholder="Chọn mối quan hệ..." style="width: 88%" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <input class="k-textbox" data-bind="value: IDPhuHuynh" data-source="dataSource" type="hidden" />
+    </p>
+
 </script>
 
 <style type="text/css">

@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniTagDataAccess.Models;
 using UniTagDataAccess.Objects.Web;
 
 namespace UniTagDataAccess.DataAccess.Web
@@ -45,7 +46,44 @@ namespace UniTagDataAccess.DataAccess.Web
             }
         }
 
-        public static bool InsertOrUpdateHocSinh(HocSinhWebOBJ obj)
+        public static List<HocSinhWebModel> DanhSachHS()
+        {
+            List<HocSinhWebModel> ds = new List<HocSinhWebModel>();
+            try
+            {
+                DataTable dt = db.ExecuteDataSet("sp_WebUniTag_DanhSachHocSinh").Tables[0];
+                foreach (DataRow dr in dt.Rows)
+                {
+                    HocSinhWebModel obj = new HocSinhWebModel();
+                    obj.IDHocSinh = int.Parse(dr["ID"].ToString());
+                    obj.TenHocSinh = dr["Ten"].ToString();
+                    ds.Add(obj);
+                }
+
+                return ds;
+            }
+            catch (Exception ex)
+            {
+                return ds;
+            }
+        }
+
+        public static bool Insert(HocSinhModel obj)
+        {
+            SqlParameter[] param = new SqlParameter[]
+            {
+                new SqlParameter("@IDHocSinh", obj.ID),
+                new SqlParameter("@IDLop", obj.LopOBJ.IDLop),
+                new SqlParameter("@Ten", obj.Ten),
+                new SqlParameter("@NgaySinh", obj.NgaySinh),
+                new SqlParameter("@GioiTinh", obj.GioiTinh.value),
+                new SqlParameter("@DiaChi", obj.DiaChi)
+            };
+
+            return db.ExecuteNonQuery("sp_WebUniTag_InsertOrUpdateHocSinh", param) > 0;
+        }
+
+        public static bool Update(HocSinhWebOBJ obj)
         {
             SqlParameter[] param = new SqlParameter[]
             {

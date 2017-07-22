@@ -13,6 +13,7 @@ namespace UniTagDataAccess.Objects.Web
         public int IDImage { get; set; }
         public string Path { get; set; }
         public string TenPhuHuynh { get; set; }
+        public string TenHocSinh { get; set; }
         public string DiaChi { get; set; }
         public string NgaySinh { get; set; }
         public int IDMoiQuanHe { get; set; }

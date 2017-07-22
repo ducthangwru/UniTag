@@ -13,16 +13,43 @@
         $(document).ready(function () {
             dataSource = new kendo.data.DataSource({
                 transport: {
-                    read: {                        
-                            url: '@Url.Action("DanhSachHS", "Students")',
+                    read: {
+                        url: "/Students/DanhSachHS",
                             dataType: 'jsonp',
                             success: function (msg) {
                                 options.success(msg.d);
                             }
                     },
-                    create: {
-                        url: '@Url.Action("InsertOrUpdateHocSinh", "Students")',
-                        dataType: 'jsonp',
+                    create: function (options) {
+                        console.log(options.models);
+                        var data = {
+                            "ID": options.data.models[0].id,
+                            "IDLop": $("#lop").data.kendoComboBox().val(),
+                            "Ten": options.data.models[0].Ten,
+                            "NgaySinh": options.data.models[0].NgaySinh,
+                            "GioiTinh": $("#gioitinh").kendoComboBox().val(),
+                            "DiaChi": options.data.models[0].DiaChi
+                        }
+
+                        console.log(data);
+                        $.ajax({
+                            type: "POST",
+                            url: "/Students/InsertOrUpdateHocSinh",
+                            dataType: "jsonp",
+                            data: data,
+                            success: function (msg) {
+                                $('#grid').data('kendoGrid').dataSource.read();
+                                $('#grid').data('kendoGrid').refresh();
+                            },
+                            error: function () {
+                                $('#grid').data('kendoGrid').dataSource.read();
+                                $('#grid').data('kendoGrid').refresh();
+                            }
+                        });
+                    },
+                    destroy: {
+                        url: '@Url.Action("Delete", "Students")',
+                        dataType: "jsonp"
                     },
                     parameterMap: function (options, operation) {
                         if (operation !== "read" && options.models) {
@@ -31,19 +58,19 @@
                     }
                 },
                 batch: true,
-                pageSize: 10, 
+                pageSize: 10,
                 schema: {
                     model: {
                         id: "ID",
                         fields: {
-                            ID: { type: "number" },
-                            IDImage: { type: "number" },
-                            Ten: { type: "string" },
-                            NgaySinh: { type: "string" },
-                            GioiTinh: { type: "string" },
-                            DiaChi: { type: "string" },
-                            Path: { type: "string" },
-                            Lop: { type: "string" }
+                            IDImage: { editable: false, nullable: true, type: "string" },
+                            IDLop: { editable: true, nullable: true, type: "string" },
+                            Ten: { editable: true, nullable: true, type: "string" },
+                            NgaySinh: { editable: true, nullable: true, type: "string" },
+                            GioiTinh: { editable: true, nullable: true, type: "string" },
+                            DiaChi: { editable: true, nullable: true, type: "string" },
+                            Path: { editable: false, nullable: true, type: "string" },
+                            Lop: { editable: false, nullable: true, type: "string" }
                         }
                     }
                 }
@@ -105,12 +132,15 @@
                     width: '10%'
                 },
                 { command: [{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
-                , editable: "popup",
+                , editable: {
+                    mode: "popup",
+                    template: kendo.template($("#popup_editor").html()),
+                    scrollable: false
+                },
                 dataBinding: function () {
                     record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
                 },
                 edit: function (e) {
-                    console.log(e);
                     if (e.model.id == 0) {
                         e.container.kendoWindow("title", "Tạo mới");
                         e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
@@ -120,9 +150,89 @@
                         e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
                         e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
                     }
+
+                    $("#gioitinh").kendoComboBox();
+
+                    $("#lop").kendoComboBox({
+                        emptyText: "",
+                        dataTextField: "Lop",
+                        dataValueField: "ID",
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: '@Url.Action("DanhSachLop", "Students")',
+                                    dataType: 'jsonp',
+                                    success: function (msg) {
+                                        options.success(msg.d);
+                                    }
+                                },
+                            }
+                        }
+                    });
                 }
             });
         });
+</script>
+
+<script id="popup_editor" type="text/x-kendo-template">
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Tên học sinh: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: Ten" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Ngày sinh: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: NgaySinh" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Địa Chỉ: </label>
+            </div>
+            <div class="col-sm-2">
+                <input class="k-textbox" data-bind="value: DiaChi" data-source="dataSource" type="text" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Giới tính: </label>
+            </div>
+            <div class="col-sm-6">
+               <select id="gioitinh" placeholder="Chọn giới tính..." style="width: 88%;" >
+                      <option>Nam</option>
+                      <option>Nữ</option>
+                      <option>Khác</option>
+               </select>
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="row" style="margin-left: 5px">
+            <div class="col-sm-4" style="margin-top: 5px">
+                <label> Lớp: </label>
+            </div>
+            <div class="col-sm-6">
+                <input id="lop" data-bind="value: Lop" placeholder="Chọn lớp..." style="width: 88%" />
+            </div>
+        </div>
+    </p>
+    <p>
+        <input class="k-textbox" data-bind="value: ID" data-source="dataSource" type="hidden" />
+    </p>
+
 </script>
 
 <style type="text/css">

@@ -34,7 +34,12 @@ namespace UniTagDataAccess.DataAccess.Web
                     obj.IDMoiQuanHe = int.Parse(dr["IDMoiQuanHe"].ToString());
                     obj.TenMoiQuanHe = dr["TenMoiQuanHe"].ToString();
                     obj.isActive = (bool.Parse(dr["isActive"].ToString()) == true) ? "Đã kích hoạt" : "Chưa kích hoạt";
-
+                    obj.TenHocSinh = "";
+                    DataTable dt2 = db.ExecuteDataSet("sp_WebUniTag_DanhSachHocSinhTheoPhuHuynh", new SqlParameter("@IDPhuHuynh", obj.ID)).Tables[0];
+                    foreach(DataRow dr2 in dt2.Rows)
+                    {
+                        obj.TenHocSinh += dr2["Ten"].ToString();
+                    }
                     ds.Add(obj);
                 }
 
@@ -46,7 +51,23 @@ namespace UniTagDataAccess.DataAccess.Web
             }
         }
 
-        public static bool InsertOrUpdatePhuHuynh(PhuHuynhWebOBJ obj)
+        public static bool Insert(PhuHuynhWebOBJ obj)
+        {
+            SqlParameter[] param = new SqlParameter[]
+            {
+                new SqlParameter("@IDPhuHuynh", obj.ID),
+                new SqlParameter("@IDThe", obj.IDThe),
+                new SqlParameter("@TenPhuHuynh", obj.TenPhuHuynh),
+                new SqlParameter("@DiaChi", obj.DiaChi),
+                new SqlParameter("@NgaySinh", obj.NgaySinh),
+                new SqlParameter("@IDMoiQuanHe", obj.IDMoiQuanHe),
+                new SqlParameter("@GioiTinh", obj.GioiTinh)
+            };
+
+            return db.ExecuteNonQuery("sp_WebUniTag_InsertOrUpdatePhuHuynh", param) > 0;
+        }
+
+        public static bool Update(PhuHuynhWebOBJ obj)
         {
             SqlParameter[] param = new SqlParameter[]
             {
@@ -76,6 +97,24 @@ namespace UniTagDataAccess.DataAccess.Web
             };
 
             return db.ExecuteNonQuery("sp_WebUniTag_UpdateImagePhuHuynh", param) > 0;
+        }
+
+        public static bool GanHocSinh(string IDPhuHuynh, string IDHocSinh)
+        {
+            try
+            {
+                SqlParameter[] param = new SqlParameter[]
+                {
+                    new SqlParameter("@IDPhuHuynh", IDPhuHuynh),
+                    new SqlParameter("@IDHocSinh", IDHocSinh)
+                };
+
+                return db.ExecuteNonQuery("sp_WebUniTag_GanMoiQuanHePHHS", param) > 0;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
 
         public static bool ActiveThePhuHuynh(int IDPhuHuynh, bool isActive)
