@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UniTagDataAccess.Utils;
 using UniTagDataAccess.Objects.App;
+using System.Globalization;
 
 namespace UniTagDataAccess.DataAccess.App
 {
@@ -20,6 +21,12 @@ namespace UniTagDataAccess.DataAccess.App
             List<HocSinhCheckinAppOBJ> OBJ = new List<HocSinhCheckinAppOBJ>();
             try
             {
+                try
+                {
+                    NgaySql = DateTime.ParseExact(NgaySql, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                }
+                catch { }
+
                 SqlParameter[] param = new SqlParameter[]{
                     new SqlParameter("@date", NgaySql),
                     new SqlParameter("@idlop", idLop),
@@ -31,18 +38,38 @@ namespace UniTagDataAccess.DataAccess.App
                 {
                     HocSinhCheckinAppOBJ obj = new HocSinhCheckinAppOBJ();
                     obj.idCheck = long.Parse(dr["ID"].ToString());
-                    obj.idHocSinh = int.Parse(dr["IDHocSinh"].ToString());
-                    obj.NgaySinh = DateTime.Parse(dr["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
-                    obj.Ten = dr["Ten"].ToString();
-                    obj.GioiTinh = dr["GioiTinh"].ToString();
+                    obj.CaDuaDon = int.Parse(dr["CaDuaDon"].ToString());
                     obj.XacNhan = Boolean.Parse((dr["XacNhan"]).ToString());
-                    int idImage = int.Parse(dr["IDImage"].ToString());
-                    DataRow dr1 = db.ExecuteDataSet("sp_AppUniTag_GetThongTinAnhTheoID", new SqlParameter("@idimage", idImage)).Tables[0].Rows[0];
-                    obj.image = new ImageAppOBJ();
-                    obj.image.ID = long.Parse(dr1["ID"].ToString());
-                    obj.image.NgayTao = DateTime.Parse(dr1["NgayTao"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
-                    obj.image.Path = Utils.Utils.BASEURL + dr1["Path"].ToString();
-                    obj.image.ThoiGianChup = DateTime.Parse(dr1["ThoiGianChup"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    obj.TgianXacNhan = DateTime.Parse(dr["ThoiGian"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    HocSinhAppOBJ HocSinh = new HocSinhAppOBJ();
+                    HocSinh.ID = int.Parse(dr["IDHocSinh"].ToString());
+                    DataRow dr1 = db.ExecuteDataSet("sp_AppUniTag_ThongTinHocSinhTheoID", new SqlParameter("@id", HocSinh.ID)).Tables[0].Rows[0];
+                    HocSinh.IDImage = int.Parse(dr1["idImage"].ToString());
+                    HocSinh.Ten = dr1["Ten"].ToString();
+                    HocSinh.GioiTinh = dr1["GioiTinh"].ToString();
+                    HocSinh.DiaChi = dr1["DiaChi"].ToString();
+                    HocSinh.NgaySinh = DateTime.Parse(dr1["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
+                    HocSinh.Lop = dr1["Lop"].ToString();
+                    HocSinh.AnhHocSinh = ImagesAppDB.GetThongTinAnhTheoID(HocSinh.IDImage);
+                    HocSinh.NgayTao = DateTime.Parse(dr1["NgayTao"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    
+                    obj.PhuHuynh.ID = int.Parse(dr["IDPhuHuynh"].ToString());
+                    DataRow dr2 = db.ExecuteDataSet("sp_AppUniTag_GetThongTinPHTheoID", new SqlParameter("@id", obj.PhuHuynh.ID)).Tables[0].Rows[0];
+                    obj.PhuHuynh.IDThe = dr2["IDThe"].ToString();
+                    obj.PhuHuynh.IDImage = int.Parse(dr2["IDImage"].ToString());
+                    obj.PhuHuynh.TenPhuHuynh = dr2["TenPhuHuynh"].ToString();
+                    obj.PhuHuynh.DiaChi = dr2["DiaChi"].ToString();
+                    obj.PhuHuynh.NgaySinh = DateTime.Parse(dr2["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
+                    obj.PhuHuynh.IDMoiQuanHe = 0;
+                    obj.PhuHuynh.MoiQuanHe = "";
+                    obj.PhuHuynh.GioiTinh = dr2["GioiTinh"].ToString();
+                    obj.PhuHuynh.isActive = bool.Parse(dr2["isActive"].ToString());
+                    obj.PhuHuynh.HocSinh = HocSinh;
+                    obj.PhuHuynh.Image = ImagesAppDB.GetThongTinAnhTheoID(obj.PhuHuynh.IDImage);
+                    obj.PhuHuynh.NgayTao = DateTime.Parse(dr2["NgayTao"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+
+                    obj.imageCheckin.ID = long.Parse(dr["IDImage"].ToString());
+                    obj.imageCheckin = ImagesAppDB.GetThongTinAnhTheoID(obj.imageCheckin.ID);
                     OBJ.Add(obj);
                 }
                 return OBJ;

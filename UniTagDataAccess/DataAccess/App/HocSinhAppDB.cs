@@ -14,34 +14,29 @@ namespace UniTagDataAccess.DataAccess.App
     {
         public static SqlDataHelpers db = new SqlDataHelpers();
         public HocSinhAppDB() { }
-        public static List<HocSinhAppOBJ> ThongTinHocSinhTheoIDPhuHuynh(int ID)
+        public static HocSinhAppOBJ ThongTin1HocSinhTheoIDPhuHuynh(int ID, int idLop, int count)
         {
-            List<HocSinhAppOBJ> ds = new List<HocSinhAppOBJ>();
+            HocSinhAppOBJ obj = new HocSinhAppOBJ();
             try
             {
-                DataTable dt = db.ExecuteDataSet("sp_AppUniTag_ThongTinHocSinhTheoIDPhuHuynh", new SqlParameter("@id", ID)).Tables[0];
-                foreach(DataRow dr in dt.Rows)
-                {
-                    HocSinhAppOBJ obj = new HocSinhAppOBJ();
+                DataTable dt = db.ExecuteDataSet("sp_AppUniTag_ThongTinHocSinhTheoIDPhuHuynh", new SqlParameter("@id", ID), new SqlParameter("@idlop", idLop)).Tables[0];
+                DataRow dr = dt.Rows[count % (dt.Rows.Count)];
 
-                    obj.ID = int.Parse(dr["idhs"].ToString());
-                    obj.IDImage = int.Parse(dr["idImageHS"].ToString());
-                    obj.Ten = dr["Ten"].ToString();
-                    obj.GioiTinh = dr["GioiTinh"].ToString();
-                    obj.DiaChi = dr["DiaChi"].ToString();
-                    obj.NgaySinh = DateTime.Parse(dr["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
-                    obj.Lop = dr["Lop"].ToString();
-                    obj.AnhHocSinh = ImagesAppDB.GetThongTinAnhTheoID(obj.IDImage);
-                    obj.NgayTao = DateTime.Parse(dr["NgayTao"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
 
-                    ds.Add(obj);
-                }
-
-                return ds;
+                obj.ID = int.Parse(dr["idhs"].ToString());
+                obj.IDImage = int.Parse(dr["idImageHS"].ToString());
+                obj.Ten = dr["Ten"].ToString();
+                obj.GioiTinh = dr["GioiTinh"].ToString();
+                obj.DiaChi = dr["DiaChi"].ToString();
+                obj.NgaySinh = DateTime.Parse(dr["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
+                obj.Lop = dr["Lop"].ToString();
+                obj.AnhHocSinh = ImagesAppDB.GetThongTinAnhTheoID(obj.IDImage);
+                obj.NgayTao = DateTime.Parse(dr["NgayTao"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                return obj;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return ds;
+                return obj;
             }
         }
     }

@@ -16,12 +16,12 @@ namespace UniTagWEB.Controllers
     public class CheckinController : ApiController
     {
         [HttpGet]
-        public HttpResponseMessage GetThongTinThe(string id)
+        public HttpResponseMessage GetThongTinThe(string id, int idLop, int idCa)
         {
             ThongTinGetTheCheckin obj = new ThongTinGetTheCheckin();
             try
             {
-                obj.chitiet = PhuHuynhAppDB.GetThongTinPhuHuynhTheoIDThe(id);
+                obj.chitiet = PhuHuynhAppDB.GetThongTinPhuHuynhTheoIDThe(id, idLop, idCa);
                 if (string.IsNullOrEmpty(obj.chitiet.IDThe))
                 {
                     obj.chitiet = new PhuHuynhAppOBJ();
@@ -47,15 +47,6 @@ namespace UniTagWEB.Controllers
             {
                 if (HttpContext.Current.Request.Files.AllKeys.Any())
                 {
-
-                    //if (HttpContext.Current.Request.Files.Count > 0)
-                    //{
-                    //    DateTime date = DateTime.Now;
-                    //    string tenAlbum = "suco: " + date.ToString("dd-MM-yyyy HH:mm:ss");
-                    //    //ImagesDB.insertAlbumTheoTenVaIDNV(tenAlbum, idnv);
-                    //    //idAlbum = ImagesDB.getIDAlbumTheoTenvaIDNV(tenAlbum, idnv);
-                    //}
-
                     for (int i = 0; i < HttpContext.Current.Request.Files.Count; i++)
                     {
                         var file = HttpContext.Current.Request.Files[i];
@@ -91,16 +82,16 @@ namespace UniTagWEB.Controllers
                 ThongTinCheckinOBJ OBJ = new ThongTinCheckinOBJ();
                 OBJ.siso = LopHocAppDB.ThongTinSiSoTheoCaDuaDon(CaDuaDon, IDHocSinh, Lop, DateTime.Now.ToString("yyyy-MM-dd"));
 
-                if (CheckinAppDB.InsertCheckin(IDPhuHuynh, IDHocSinh, Lop, idimage, CaDuaDon, XacNhan))
+                if (idimage > 0 && CheckinAppDB.InsertCheckin(IDPhuHuynh, IDHocSinh, Lop, idimage, CaDuaDon, XacNhan))
                 {
                     OBJ.status = true;
+                    OBJ.siso = LopHocAppDB.ThongTinSiSoTheoCaDuaDon(CaDuaDon, IDHocSinh, Lop, DateTime.Now.ToString("yyyy-MM-dd"));
                     OBJ.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, OBJ);
                 }
                     
                 else
                 {
-
                     return Request.CreateResponse(HttpStatusCode.BadRequest, OBJ);
                 }
             }

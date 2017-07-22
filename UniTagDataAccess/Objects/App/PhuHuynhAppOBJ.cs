@@ -18,7 +18,7 @@ namespace UniTagDataAccess.Objects.App
             MoiQuanHe = "";
             NgayTao = "";
             Image = new ImageAppOBJ();
-            HocSinh = new List<HocSinhAppOBJ>();
+            HocSinh = new HocSinhAppOBJ();
         }
         public int ID { get; set; }
         public string IDThe { get; set; }
@@ -32,6 +32,6 @@ namespace UniTagDataAccess.Objects.App
         public string NgayTao { get; set; }
         public bool isActive { get; set; }
         public ImageAppOBJ  Image { get; set; }
-        public List<HocSinhAppOBJ> HocSinh { get; set; }
+        public HocSinhAppOBJ HocSinh { get; set; }
     }
 }

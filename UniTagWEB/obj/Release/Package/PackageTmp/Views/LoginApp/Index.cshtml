@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Đăng nhập hệ thống</title>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/login.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+</head>
+<body>
+    <script>
+        $(document).ready(function () {
+            $("#submitbutton").click(function (e) {
+                e.preventDefault();
+                if ($('#inputEmail').val().length < 6 || $('#inputEmail').val().length > 18) {
+                    bootbox.alert({
+                        message: "Tài khoản phải có độ dài từ 6 - 18 kí tự!",
+                        size: 'small',
+                        callback: function () {
+                            $("#inputPassword").focus();
+                        }
+                    })
+                }
+                else if ($("#inputPassword").val().length < 4 || $('#inputEmail').val().length > 20) {
+                    bootbox.alert({
+                        message: "Mật khẩu phải có độ dài từ 4 - 20 kí tự!",
+                        size: 'small',
+                        callback: function () {
+                            $("#inputPassword").focus();
+                        }
+                    })
+                }
+                else {
+                    var data = {
+                        "username": $("#inputEmail").val(),
+                        "password": $("#inputPassword").val()
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/LoginApp/CheckLogin",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (res) {
+                            if (res) {
+                                //window.location.replace("");
+                                window.location = "/Home/Index";
+                            } else {
+                                bootbox.alert({
+                                    message: "Tài khoản hoặc mật khẩu không chính xác!",
+                                    size: 'small',
+                                    callback: function () {
+                                        $("#inputPassword").focus();
+                                    }
+                                })
+                            }
+                        },
+                        error: function (err) {
+                            bootbox.alert({
+                                message: "Tài khoản hoặc mật khẩu không chính xác!",
+                                size: 'small',
+                                callback: function () {
+                                    $("#inputPassword").focus();
+                                }
+                            })
+                        }
+                    });
+                }
+
+                
+                
+            });
+
+        })
+    </script>
+
+    <div class="container">
+        <div class="card card-container">
+            <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+            <img id="profile-img" class="profile-img-card" src="~/assets/image-resources/logo Lachong-01.png" />
+            <p id="profile-name" class="profile-name-card"></p>
+            <form class="form-signin">
+                <span id="reauth-email" class="reauth-email"></span>
+                <input type="text" id="inputEmail" class="form-control" placeholder="Tên đăng nhập" required autofocus>
+                <input type="password" id="inputPassword" class="form-control" placeholder="Mật khẩu" required>
+                <div id="remember" class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Ghi nhớ mật khẩu
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block btn-signin" id="submitbutton" type="button">Đăng nhập</button>
+            </form><!-- /form -->
+            <a href="#" class="forgot-password">
+                Quên mật khẩu?
+            </a>
+        </div><!-- /card-container -->
+    </div><!-- /container -->
+
+</body>
+
+</html>

@@ -15,7 +15,7 @@ namespace UniTagDataAccess.DataAccess.App
     {
         public static SqlDataHelpers db = new SqlDataHelpers();
         public ImagesAppDB() { }
-        public static ImageAppOBJ GetThongTinAnhTheoID(int idimage)
+        public static ImageAppOBJ GetThongTinAnhTheoID(long idimage)
         {
             ImageAppOBJ obj = new ImageAppOBJ();
             try

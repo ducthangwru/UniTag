@@ -9,6 +9,7 @@ using UniTagWEB.Common;
 
 namespace UniTagWEB.Controllers
 {
+    [Authorize]
     public class ReportCheckinController : Controller
     {
         // GET: ReportCheckin
