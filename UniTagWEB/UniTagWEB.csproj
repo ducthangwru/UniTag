@@ -661,12 +661,12 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Code\CustomMembershipProvider.cs" />
     <Compile Include="Common\JsonpResult.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CheckinController.cs" />
-    <Compile Include="Controllers\ClassAppController.cs" />
     <Compile Include="Controllers\ClassController.cs" />
+    <Compile Include="Controllers\ClassWebController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginWebController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -713,6 +713,7 @@
     <Folder Include="obj\Release\ProfileTransformWebConfig\transformed\Views\" />
     <Folder Include="obj\Release\TempPE\" />
     <Folder Include="obj\Release\TransformWebConfig\transformed\Views\" />
+    <Folder Include="Views\Base\" />
     <Folder Include="Views\Class\" />
   </ItemGroup>
   <ItemGroup>

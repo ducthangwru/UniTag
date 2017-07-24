@@ -8,6 +8,16 @@ namespace UniTagDataAccess.Objects.App
 {
     public class HocSinhAppOBJ
     {
+        public HocSinhAppOBJ()
+        {
+            Ten = "";
+            Lop = "";
+            GioiTinh = "";
+            NgaySinh = "";
+            NgayTao = "";
+            DiaChi = "";
+            AnhHocSinh = new ImageAppOBJ();
+        }
         public int ID { get; set; }
         public int IDImage { get; set; }
         public string Ten { get; set; }

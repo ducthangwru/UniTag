@@ -9,20 +9,19 @@ using UniTagWEB.Common;
 
 namespace UniTagWEB.Controllers
 {
-    public class ReportCheckinController : BaseController
+    public class ClassWebController : BaseController
     {
-        // GET: ReportCheckin
+        // GET: Class
         public ActionResult Index()
         {
             return View();
         }
 
-        public JsonResult DanhSachCheckin()
+        public JsonResult DanhSachLop()
         {
-            IEnumerable<CheckinWebOBJ> model = new List<CheckinWebOBJ>();
-            model = CheckinWebDB.DanhSachCheckin();
+            IEnumerable<ClassWebOBJ> model = new List<ClassWebOBJ>();
+            model = ClassWebDB.DanhSachLopHoc();
             return this.Jsonp(model);
         }
-
     }
 }

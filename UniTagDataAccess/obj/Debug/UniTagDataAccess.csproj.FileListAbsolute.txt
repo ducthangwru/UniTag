@@ -1,5 +1,0 @@
-C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\bin\Debug\UniTagDataAccess.dll
-C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\bin\Debug\UniTagDataAccess.pdb
-C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Debug\UniTagDataAccess.dll
-C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Debug\UniTagDataAccess.pdb
-C:\Users\DUC THANG\Documents\UniTagWEB\UniTagDataAccess\obj\Debug\UniTagDataAccess.csprojResolveAssemblyReference.cache

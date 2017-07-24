@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Phần mềm UniTag</title>
+    <title> Phần mềm UniTag</title>
 
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -124,11 +124,15 @@
                     isClosed = true;
                 }
             }
-
+            $("#logout-btn").click(function () {
+                window.location = "/LoginWeb/SignOut";
+            })
             $('[data-toggle="offcanvas"]').click(function () {
                 $('#wrapper').toggleClass('toggled');
             });
+            
         });
+        
     </script>
 </head>
 <body>
@@ -250,7 +254,7 @@
 
                 <div class="dropdown" id="notifications-btn"></div>
                 <div class="dropdown" id="messages-btn"></div>
-                <a class="header-btn" id="logout-btn" href="/Login/Index" title="Đăng xuất">
+                <a class="header-btn" id="logout-btn" title="Đăng xuất">
                     <i class="glyph-icon icon-linecons-lock"></i>
                 </a>
             </div>

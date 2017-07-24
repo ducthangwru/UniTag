@@ -18,23 +18,11 @@
         $(document).ready(function () {
             $("#submitbutton").click(function (e) {
                 e.preventDefault();
-                if ($('#inputEmail').val().length < 6 || $('#inputEmail').val().length > 18) {
-                    bootbox.alert({
-                        message: "Tài khoản phải có độ dài từ 6 - 18 kí tự!",
-                        size: 'small',
-                        callback: function () {
-                            $("#inputPassword").focus();
-                        }
-                    })
-                }
-                else if ($("#inputPassword").val().length < 4 || $('#inputEmail').val().length > 20) {
-                    bootbox.alert({
-                        message: "Mật khẩu phải có độ dài từ 4 - 20 kí tự!",
-                        size: 'small',
-                        callback: function () {
-                            $("#inputPassword").focus();
-                        }
-                    })
+                if ($('#inputEmail').val().length < 5 || $('#inputEmail').val().length > 18
+                    || $("#inputPassword").val().length < 4 || $('#inputEmail').val().length > 20) {
+                    $('#inputPassword').val("");
+                    $('#inputEmail').focus();
+                    $("#login").html("Tài khoản hoặc mật khẩu sai!");
                 }
                 else {
                     var data = {
@@ -48,35 +36,28 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (res) {
+                            $('#inputPassword').val("");
+                            $('#inputEmail').focus();
                             if (res) {
-                                //window.location.replace("");
                                 window.location = "/Home/Index";
                             } else {
-                                bootbox.alert({
-                                    message: "Tài khoản hoặc mật khẩu không chính xác!",
-                                    size: 'small',
-                                    callback: function () {
-                                        $("#inputPassword").focus();
-                                    }
-                                })
+                                $("#login").html("Tài khoản hoặc mật khẩu sai!");
                             }
                         },
                         error: function (err) {
-                            bootbox.alert({
-                                message: "Tài khoản hoặc mật khẩu không chính xác!",
-                                size: 'small',
-                                callback: function () {
-                                    $("#inputPassword").focus();
-                                }
-                            })
+                            $("#login").html("Tài khoản hoặc mật khẩu sai!");
+                            $('#inputPassword').val("");
+                            $('#inputEmail').focus();
                         }
                     });
                 }
-
-                
-                
             });
 
+        })
+        $(document).keypress(function (e) {
+            if (e.which == 13 & $('#inputPassword').val().length > 0) {
+                $("#submitbutton").click();
+            }
         })
     </script>
 
@@ -89,6 +70,8 @@
                 <span id="reauth-email" class="reauth-email"></span>
                 <input type="text" id="inputEmail" class="form-control" placeholder="Tên đăng nhập" required autofocus>
                 <input type="password" id="inputPassword" class="form-control" placeholder="Mật khẩu" required>
+                <div id="login" style="color: red"> </div>
+
                 <div id="remember" class="checkbox">
                     <label>
                         <input type="checkbox" value="remember-me"> Ghi nhớ mật khẩu

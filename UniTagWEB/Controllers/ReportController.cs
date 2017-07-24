@@ -18,15 +18,17 @@ namespace UniTagWEB.Controllers
             try
             {
                 obj.dsngay = NgayCheckinAppDB.DanhSachNgayCheckin();
-                if(obj.dsngay.Count > 0){
+                if (obj.dsngay.Count > 0)
+                {
                     obj.status = true;
                     obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, obj);
-                    
+
                 }
                 return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
@@ -76,7 +78,7 @@ namespace UniTagWEB.Controllers
             ThongTinGetHocSinhCheckin obj = new ThongTinGetHocSinhCheckin();
             try
             {
-                obj.dshs = HocSinhCheckinAppDB.DanhSachHocSinhCheckinTheoCa(ngay, idlop, idca, timkiem);
+                obj.dshs = HocSinhCheckinAppDB.DanhSachCheckinCuoiCungTheoCa(ngay, idlop, idca, timkiem);
                 if (obj.dshs.Count > 0)
                 {
                     obj.status = true;
@@ -90,9 +92,30 @@ namespace UniTagWEB.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
-	}
+        [HttpGet]
+        public HttpResponseMessage getDanhSachCheckinTheoCa([FromUri]string ngay, [FromUri] int idlop, [FromUri] int idca, [FromUri] int idhs, [FromUri] string timkiem)
+        {
+            ThongTinGetHocSinhCheckin obj = new ThongTinGetHocSinhCheckin();
+            try
+            {
+                obj.dshs = HocSinhCheckinAppDB.DanhSachHocSinhCheckinTheoCa(ngay, idlop, idca, idhs, timkiem);
+                if (obj.dshs.Count > 0)
+                {
+                    obj.status = true;
+                    obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
+                    return Request.CreateResponse(HttpStatusCode.OK, obj);
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+    }
 
-    public class ThongTinGetNgayCheckin{
+    public class ThongTinGetNgayCheckin
+    {
         public ThongTinGetNgayCheckin()
         {
             status = false;

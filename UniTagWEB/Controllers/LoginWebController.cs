@@ -14,21 +14,27 @@ namespace UniTagWEB.Controllers
         // GET: LoginWeb
         public ActionResult Index()
         {
-            //if (FormsAuthentication.IsEnabled)
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
-            return View();
+            var session = Session[UniTagDataAccess.Utils.Utils.USER_SESSION];
+            if (session == null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult CheckLogin(string username, string password)
         {
-            bool login = Membership.ValidateUser(username, password);
+            bool login = TaiKhoanAppDB.ThongTinTaiKhoan(username, password).id > 0;
             if (login)
             {
-                FormsAuthentication.SetAuthCookie(username, true);
+                Session.Add(UniTagDataAccess.Utils.Utils.USER_SESSION, username);
             }
             return Json(login, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult SignOut()
+        {
+            Session[UniTagDataAccess.Utils.Utils.USER_SESSION] = null;
+            return RedirectToAction("Index");
         }
     }
 }

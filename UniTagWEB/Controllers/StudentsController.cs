@@ -10,7 +10,7 @@ using UniTagWEB.Common;
 
 namespace UniTagWEB.Controllers
 {
-    public class StudentsController : Controller
+    public class StudentsController : BaseController
     {
         // GET: Students
         public ActionResult Index()

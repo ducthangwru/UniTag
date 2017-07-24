@@ -16,6 +16,7 @@ namespace UniTagDataAccess.Utils
         public static string MSG_OK = "Thành Công!";
         public static string MSG_ERROR = "Không Thành Công!";
         public static string SecurityKey = "!lac@hong#media$";
+        public static string USER_SESSION = "USER_SESSION";
         public static string Encrypt(string toEncrypt)
         {
             byte[] keyArray;

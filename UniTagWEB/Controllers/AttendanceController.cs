@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace UniTagWEB.Controllers
 {
-    public class AttendanceController : Controller
+    public class AttendanceController : BaseController
     {
         // GET: Attendance
         public ActionResult Index()
