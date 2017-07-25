@@ -916,10 +916,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/28/2015 04:04:30</publishTime>
     </File>
     <File Include="bin/UniTagDataAccess.dll">
-      <publishTime>07/18/2017 17:04:31</publishTime>
+      <publishTime>07/19/2017 15:46:30</publishTime>
     </File>
     <File Include="bin/UniTagWEB.dll">
-      <publishTime>07/18/2017 17:31:59</publishTime>
+      <publishTime>07/19/2017 15:46:35</publishTime>
     </File>
     <File Include="Content/bootstrap.css">
       <publishTime>07/12/2017 11:57:58</publishTime>
@@ -1084,7 +1084,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/14/2017 04:36:55</publishTime>
     </File>
     <File Include="Properties/PublishProfiles/UniTagWEB.pubxml.user">
-      <publishTime>07/18/2017 17:04:41</publishTime>
+      <publishTime>07/18/2017 17:32:05</publishTime>
     </File>
     <File Include="Scripts/bootbox.min.js">
       <publishTime>07/12/2017 10:59:42</publishTime>
@@ -1126,13 +1126,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/13/2017 11:49:56</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>07/13/2017 12:11:19</publishTime>
+      <publishTime>07/19/2017 15:45:22</publishTime>
     </File>
     <File Include="Views/Login/Index.cshtml">
       <publishTime>07/13/2017 09:07:54</publishTime>
     </File>
     <File Include="Views/Parents/Index.cshtml">
-      <publishTime>07/18/2017 13:53:36</publishTime>
+      <publishTime>07/18/2017 22:44:54</publishTime>
     </File>
     <File Include="Views/ReportCheckin/Index.cshtml">
       <publishTime>07/17/2017 22:24:36</publishTime>
@@ -1141,7 +1141,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/13/2017 12:02:07</publishTime>
     </File>
     <File Include="Views/Students/Index.cshtml">
-      <publishTime>07/17/2017 21:21:29</publishTime>
+      <publishTime>07/19/2017 15:31:40</publishTime>
     </File>
     <File Include="Views/Teachers/Index.cshtml">
       <publishTime>07/13/2017 12:14:28</publishTime>

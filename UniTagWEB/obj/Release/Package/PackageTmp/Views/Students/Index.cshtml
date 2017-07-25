@@ -12,6 +12,7 @@
 <script>
         $(document).ready(function () {
             dataSource = new kendo.data.DataSource({
+                autoSync: false,
                 transport: {
                     read: {
                         url: "/Students/DanhSachHS",
@@ -20,23 +21,9 @@
                                 options.success(msg.d);
                             }
                     },
-                    create: function (options) {
-                        console.log(options.models);
-                        var data = {
-                            "ID": options.data.models[0].id,
-                            "IDLop": $("#lop").data.kendoComboBox().val(),
-                            "Ten": options.data.models[0].Ten,
-                            "NgaySinh": options.data.models[0].NgaySinh,
-                            "GioiTinh": $("#gioitinh").kendoComboBox().val(),
-                            "DiaChi": options.data.models[0].DiaChi
-                        }
-
-                        console.log(data);
-                        $.ajax({
-                            type: "POST",
-                            url: "/Students/InsertOrUpdateHocSinh",
+                    create: {
+                            url: "/Students/Insert",
                             dataType: "jsonp",
-                            data: data,
                             success: function (msg) {
                                 $('#grid').data('kendoGrid').dataSource.read();
                                 $('#grid').data('kendoGrid').refresh();
@@ -44,12 +31,31 @@
                             error: function () {
                                 $('#grid').data('kendoGrid').dataSource.read();
                                 $('#grid').data('kendoGrid').refresh();
-                            }
-                        });
+                            }                       
+                    },
+                    update: {
+                        url: "/Students/Update",
+                        dataType: "jsonp",
+                        success: function (msg) {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        },
+                        error: function () {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        }
                     },
                     destroy: {
                         url: '@Url.Action("Delete", "Students")',
-                        dataType: "jsonp"
+                        dataType: "jsonp",
+                        success: function (msg) {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        },
+                        error: function () {
+                            $('#grid').data('kendoGrid').dataSource.read();
+                            $('#grid').data('kendoGrid').refresh();
+                        }
                     },
                     parameterMap: function (options, operation) {
                         if (operation !== "read" && options.models) {
@@ -63,14 +69,15 @@
                     model: {
                         id: "ID",
                         fields: {
-                            IDImage: { editable: false, nullable: true, type: "string" },
-                            IDLop: { editable: true, nullable: true, type: "string" },
-                            Ten: { editable: true, nullable: true, type: "string" },
-                            NgaySinh: { editable: true, nullable: true, type: "string" },
-                            GioiTinh: { editable: true, nullable: true, type: "string" },
-                            DiaChi: { editable: true, nullable: true, type: "string" },
-                            Path: { editable: false, nullable: true, type: "string" },
-                            Lop: { editable: false, nullable: true, type: "string" }
+                            ID: { editable: false, nullable: false, defaultValue: 0 },
+                            //IDImage: { editable: false, nullable: true},
+                            IDLop: { editable: true, nullable: true},
+                            Ten: { editable: true, nullable: true},
+                            NgaySinh: { editable: true, nullable: true},
+                            GioiTinh: { editable: true, nullable: true },
+                            DiaChi: { editable: true, nullable: true },
+                            Path: { editable: false, nullable: true},
+                            Lop: { editable: false, nullable: true }
                         }
                     }
                 }
@@ -85,7 +92,10 @@
                         empty: "Kéo cột vào đây để nhóm "
                     }
                 },
-                toolbar: [{ name: "create", text: "Thêm mới" }],
+                toolbar: [{
+                    name: "create", text: "Thêm mới", click: function () {
+
+                    }}],
                 sortable: true,
                 pageable: {
                     refresh: true,
@@ -131,17 +141,27 @@
                     title: "Lớp",
                     width: '10%'
                 },
-                { command: [{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
+                {
+                    command:
+                      [
+                          { name: "edit", text: "Sửa" },
+                          { name: "destroy", text: "Xóa" }
+                      ],
+                    title: "Tác vụ", width: "20%"
+                }]
                 , editable: {
                     mode: "popup",
                     template: kendo.template($("#popup_editor").html()),
-                    scrollable: false
+                    window:{
+                        scrollable: false
+                    }
                 },
                 dataBinding: function () {
                     record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
                 },
                 edit: function (e) {
-                    if (e.model.id == 0) {
+                    console.log(e);
+                    if (e.model.ID == null) {
                         e.container.kendoWindow("title", "Tạo mới");
                         e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
                         e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
@@ -156,11 +176,11 @@
                     $("#lop").kendoComboBox({
                         emptyText: "",
                         dataTextField: "Lop",
-                        dataValueField: "ID",
+                        dataValueField: "IDLop",
                         dataSource: {
                             transport: {
                                 read: {
-                                    url: '@Url.Action("DanhSachLop", "Students")',
+                                    url: "/Students/DanhSachLop",
                                     dataType: 'jsonp',
                                     success: function (msg) {
                                         options.success(msg.d);
@@ -175,6 +195,13 @@
 </script>
 
 <script id="popup_editor" type="text/x-kendo-template">
+    <p>
+        <div class="row" style="text-align:center">
+            <div class='customer-photo'style='background-image: url(#:Path#);'></div>
+            <input name="files" id="files" type="file" aria-label="files" style="text-align:center"/>
+        </div>
+    </p>
+
     <p>
         <div class="row" style="margin-left: 5px">
             <div class="col-sm-4" style="margin-top: 5px">
@@ -211,7 +238,7 @@
                 <label> Giới tính: </label>
             </div>
             <div class="col-sm-6">
-               <select id="gioitinh" placeholder="Chọn giới tính..." style="width: 88%;" >
+               <select id="gioitinh" placeholder="Chọn giới tính..." data-bind="value: GioiTinh" data-source="dataSource" style="width: 88%;" >
                       <option>Nam</option>
                       <option>Nữ</option>
                       <option>Khác</option>
@@ -225,7 +252,7 @@
                 <label> Lớp: </label>
             </div>
             <div class="col-sm-6">
-                <input id="lop" data-bind="value: Lop" placeholder="Chọn lớp..." style="width: 88%" />
+                <input id="lop" data-bind="value: IDLop" placeholder="Chọn lớp..." style="width: 88%" />
             </div>
         </div>
     </p>
