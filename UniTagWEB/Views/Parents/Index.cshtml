@@ -9,14 +9,10 @@
     }
     .button {
         background-color: #4CAF50;
-        border: 1px;
-        text-align: center;
     }
 
     .button1 {
         background-color: #ffffff;
-        border: 1px;
-        text-align: center;
     }
 </style>
 <script src="~/data/Data.js"></script>
@@ -190,11 +186,11 @@
                     title: "Ngày sinh",
                     width: '10%'
                 }, {
-                    template: "#if( isActive =='Đã kích hoạt') {# <button id='active' onclick = \"changeColor(this,'#=IDThe#')\" class='button'>#= isActive#</button>#}" +
-                                "else{#<button id='active' class='button1' onclick = \"changeColor(this,'#=IDThe#')\">#= isActive#</button>#}#",
+                    template: "#if( isActive =='Đã kích hoạt') {# <a role='button' id='active' onclick = \"changeColor(this,'#=IDThe#')\" class='k-button k-button-icontext button'>#= isActive#</a>#}" +
+                                "else{#<a role='button' id='active' onclick = \"changeColor(this,'#=IDThe#')\" class='k-button k-button-icontext button1'>#= isActive#</button>#}#",
                     field: "isActive",
                     title: "Trạng thái",
-                    width: '10%'
+                    width: '12%'
                 },
                 { command: [{
                     text: "Gán", click: function (e)
@@ -252,7 +248,7 @@
                         $("#idhocsinh").data("kendoComboBox").value("");
 
                     }
-                    },{ name: "edit", text: "Sửa" }], title: "Tác vụ", width: "20%" }]
+                    },{ name: "edit", text: "Sửa" }], title: "Tác vụ", width: "18%" }]
                 ,editable: {
                     mode: "popup",
                     template: kendo.template($("#popup_editor").html()),
