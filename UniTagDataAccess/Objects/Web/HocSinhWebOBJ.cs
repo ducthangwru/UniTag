@@ -8,6 +8,9 @@ namespace UniTagDataAccess.Objects.Web
 {
     public class HocSinhWebOBJ
     {
+        public HocSinhWebOBJ()
+        {
+        }
         public int ID { get; set; }
         public int IDImage { get; set; }
         public int IDLop { get; set; }

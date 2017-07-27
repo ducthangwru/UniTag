@@ -8,6 +8,10 @@ namespace UniTagDataAccess.Objects.Web
 {
     public class PhuHuynhWebOBJ
     {
+        public PhuHuynhWebOBJ()
+        {
+        }
+
         public int ID { get; set; }
         public string IDThe { get; set; }
         public int IDImage { get; set; }

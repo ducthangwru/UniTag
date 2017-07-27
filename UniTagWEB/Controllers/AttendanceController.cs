@@ -8,7 +8,7 @@ namespace UniTagWEB.Controllers
 {
     public class AttendanceController : BaseController
     {
-        // GET: Attendance
+        // GET: Attendance Thang
         public ActionResult Index()
         {
             return View();

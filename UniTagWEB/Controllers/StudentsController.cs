@@ -25,6 +25,13 @@ namespace UniTagWEB.Controllers
             return this.Jsonp(model);
         }
 
+        public ActionResult DanhSachHocSinhLoc(string Ten, string IDLop)
+        {
+            IEnumerable<HocSinhWebOBJ> model = new List<HocSinhWebOBJ>();
+            model = HocSinhWebDB.DanhSachHocSinh(Ten, IDLop);
+            return Json(model,JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult Insert()
         { 
             var model = this.DeserializeObject<List<HocSinhModel>>("models");

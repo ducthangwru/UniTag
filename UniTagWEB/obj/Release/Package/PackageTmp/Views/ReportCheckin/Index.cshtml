@@ -69,6 +69,7 @@
 
             $("#grid").kendoGrid({
                 dataSource: dataSource,
+                toolbar: kendo.template($("#toolbarloc").html()),
                 height: 550,
                 groupable: {
                     messages: {
@@ -148,7 +149,121 @@
                     record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
                 }
             });
+
+
+            $("#chonngay").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
+                dateInput: true
+            });
+
+            $("#grid").find("#chonlop").kendoDropDownList({
+                dataTextField: "Lop",
+                dataValueField: "IDLop",
+                autoBind: false,
+                dataSource: {
+                    severFiltering: true,
+                    transport: {
+                        read: {
+                            url: '@Url.Action("DanhSachLop", "ReportCheckin")',
+                            dataType: 'jsonp',
+                            success: function (msg) {
+                                options.success(msg.d);
+                            }
+                        }
+                    }
+                },
+                //change: function () {
+                //    var value = this.value();
+                //    if (value) {
+                //        grid.data("kendoGrid").dataSource.filter({ field: "CategoryID", operator: "eq", value: parseInt(value) });
+                //    } else {
+                //        grid.data("kendoGrid").dataSource.filter({});
+                //    }
+                //}
+            });
+
+            $("#grid").find("#chonca").kendoDropDownList({
+                dataTextField: "TenCa",
+                dataValueField: "IDCa",
+                autoBind: false,
+                dataSource: {
+                    severFiltering: true,
+                    transport: {
+                        read: {
+                            url: '@Url.Action("DanhSachCa", "ReportCheckin")',
+                            dataType: 'jsonp',
+                            success: function (msg) {
+                                options.success(msg.d);
+                            }
+                        }
+                    }
+                },
+                //change: function () {
+                //    var value = this.value();
+                //    if (value) {
+                //        grid.data("kendoGrid").dataSource.filter({ field: "CategoryID", operator: "eq", value: parseInt(value) });
+                //    } else {
+                //        grid.data("kendoGrid").dataSource.filter({});
+                //    }
+                //}
+            });
         });
+
+    function searchcheckin() {
+
+        var ngay = $("#chonngay").val();
+        var lop = $("#grid").find("#chonlop").data("kendoDropDownList").value();
+        var ca = $("#grid").find("#chonca").data("kendoDropDownList").value();
+
+        var data = {
+            "Ngay": ngay,
+            "IDLop": lop,
+            "IDCa" : ca
+        }
+        console.log(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/ReportCheckin/DanhSachCheckinLoc",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (msg) {
+                var ds = new kendo.data.DataSource({
+                    data: msg
+                });
+                console.log(ds);
+                $('#grid').data('kendoGrid').setDataSource(ds);
+            },
+            error: function () {
+                console.log("err");
+                $('#grid').data('kendoGrid').dataSource.read();
+                $('#grid').data('kendoGrid').refresh();
+            }
+        });
+    }
+</script>
+
+<script type="text/x-kendo-template" id="toolbarloc">
+    `
+    <div class="row" style="margin-left: 5px">
+        <div class="col-sm-4" style="text-align:start">
+        </div>
+
+        <div class="col-sm-8" style="text-align:end">
+            <label class="required">Ngày:</label>
+            <input id="chonngay" value="10/07/2017" style="width:20%; text-align:center" />
+
+            <label class="required">Lớp:</label>
+            <input id="chonlop" style="width:20%; text-align:center" />
+
+            <label class="required">Ca:</label>
+            <input id="chonca" style="width:20%; text-align:center" />
+
+            <a class="k-button" onclick="searchcheckin()"><span class="k-icon k-i-search"></span>Tìm kiếm</a>
+        </div>
+    </div>
 </script>
 
 <style type="text/css">
@@ -172,3 +287,14 @@
         padding-left: 3px;
     }
 </style>
+
+<style>
+    label.required {
+        color: #FFFFFF;
+    }
+
+    input.k-textbox {
+        height: 3.13em;
+    }
+</style>
+

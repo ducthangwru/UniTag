@@ -57,6 +57,7 @@
     <Compile Include="DataAccess\App\NgayCheckinAppDB.cs" />
     <Compile Include="DataAccess\App\PhuHuynhAppDB.cs" />
     <Compile Include="DataAccess\App\TaiKhoanAppDB.cs" />
+    <Compile Include="DataAccess\Web\CaDuaDonDB.cs" />
     <Compile Include="DataAccess\Web\CheckinWebDB.cs" />
     <Compile Include="DataAccess\Web\ClassWebDB.cs" />
     <Compile Include="DataAccess\Web\HocSinhWebDB.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Objects\App\NgayCheckinAppOBJ.cs" />
     <Compile Include="Objects\App\PhuHuynhAppOBJ.cs" />
     <Compile Include="Objects\App\TaiKhoanAppOBJ.cs" />
+    <Compile Include="Objects\Web\CaDuaDonWebOBJ.cs" />
     <Compile Include="Objects\Web\CheckinWebOBJ.cs" />
     <Compile Include="Objects\Web\ClassWebOBJ.cs" />
     <Compile Include="Objects\Web\HocSinhWebOBJ.cs" />

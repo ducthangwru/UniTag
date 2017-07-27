@@ -24,5 +24,27 @@ namespace UniTagWEB.Controllers
             return this.Jsonp(model);
         }
 
+        public ActionResult DanhSachCheckinLoc(string Ngay, string IDLop, string IDCa)
+        {
+            IEnumerable<CheckinWebOBJ> model = new List<CheckinWebOBJ>();
+            model = CheckinWebDB.DanhSachCheckin(Ngay, IDLop, IDCa);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DanhSachLop()
+        {
+            IEnumerable<ClassWebOBJ> model = new List<ClassWebOBJ>();
+            model = ClassWebDB.DanhSachLopHoc();
+            return this.Jsonp(model);
+        }
+
+
+        public JsonResult DanhSachCa()
+        {
+            IEnumerable<CaDuaDonWebOBJ> model = new List<CaDuaDonWebOBJ>();
+            model = CaDuaDonDB.DanhSachCa();
+            return this.Jsonp(model);
+        }
+
     }
 }

@@ -12,7 +12,7 @@ namespace UniTagDataAccess.Utils
 {
     public class Utils
     {
-        public static string BASEURL = HttpContext.Current.Request.Url.AbsoluteUri.Replace(HttpContext.Current.Request.Url.PathAndQuery, "");
+        public static string BASEURL = base_url();
         public static string MSG_OK = "Thành Công!";
         public static string MSG_ERROR = "Không Thành Công!";
         public static string SecurityKey = "!lac@hong#media$";
@@ -101,8 +101,27 @@ namespace UniTagDataAccess.Utils
                     (toEncryptArray, 0, toEncryptArray.Length);
             //Release resources held by TripleDes Encryptor
             tdes.Clear();
+
             //return the Clear decrypted TEXT
             return UTF8Encoding.UTF8.GetString(resultArray);
         }
+        public static string base_url()
+        {
+            try
+            {
+                HttpRequest http = HttpContext.Current.Request;
+                string path = string.Empty;
+                path = string.Format("{0}://{1}{2}",
+                                http.Url.Scheme,
+                                http.Url.Host,
+                                http.Url.Port == 80 ? string.Empty : ":" + http.Url.Port);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
     }
 }

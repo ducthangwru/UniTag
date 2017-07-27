@@ -35,7 +35,7 @@ namespace UniTagWEB.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
-        } 
+        }
 
         [HttpPost]
         public HttpResponseMessage CheckinPhuHuynh([FromUri] int IDPhuHuynh, [FromUri] int IDHocSinh, [FromUri] int CaDuaDon,
@@ -88,7 +88,7 @@ namespace UniTagWEB.Controllers
                     OBJ.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, OBJ);
                 }
-                    
+
                 else
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, OBJ);
@@ -102,7 +102,8 @@ namespace UniTagWEB.Controllers
 
         public class ThongTinCheckinOBJ
         {
-            public ThongTinCheckinOBJ() {
+            public ThongTinCheckinOBJ()
+            {
                 status = false;
                 msg = UniTagDataAccess.Utils.Utils.MSG_ERROR;
             }
@@ -120,7 +121,7 @@ namespace UniTagWEB.Controllers
             }
             public bool status { get; set; }
             public string msg { get; set; }
-            public PhuHuynhAppOBJ chitiet { get; set; }            
+            public PhuHuynhAppOBJ chitiet { get; set; }
         }
     }
 }

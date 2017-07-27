@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -22,6 +23,13 @@ namespace UniTagWEB.Controllers
         {
             IEnumerable<PhuHuynhWebOBJ> model = new List<PhuHuynhWebOBJ>();
             model = PhuHuynhWebDB.DanhSachPhuHuynh();
+            return this.Jsonp(model);
+        }
+
+        public JsonResult DanhSachPHLoc(string Ten, string MaThe)
+        {
+            IEnumerable<PhuHuynhWebOBJ> model = new List<PhuHuynhWebOBJ>();
+            model = PhuHuynhWebDB.DanhSachPhuHuynh(Ten, MaThe);
             return this.Jsonp(model);
         }
 
@@ -54,11 +62,10 @@ namespace UniTagWEB.Controllers
             return this.Jsonp(r);
         }
 
-        public JsonResult ActiveThe()
+        public JsonResult ActiveThe(string IDThe)
         {
-            var model = this.DeserializeObject<PhuHuynhWebOBJ>("models");
-            bool r = true; //Chưa làm :( 
-            return this.Jsonp(r);
+            bool r = PhuHuynhWebDB.ActiveThePhuHuynh(IDThe);
+            return this.Json(r, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DanhSachMoiQH()

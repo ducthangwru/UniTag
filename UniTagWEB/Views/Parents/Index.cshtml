@@ -7,6 +7,17 @@
             position: relative;
     width: 100%;
     }
+    .button {
+        background-color: #4CAF50;
+        border: 1px;
+        text-align: center;
+    }
+
+    .button1 {
+        background-color: #ffffff;
+        border: 1px;
+        text-align: center;
+    }
 </style>
 <script src="~/data/Data.js"></script>
 <h2 style="margin-top:10px;">Danh sách phụ huynh</h2>
@@ -16,6 +27,29 @@
 </div>
 
 <script>
+    function changeColor(arg, idthe) {
+        console.log(idthe);
+        $.ajax({
+            type: "GET",
+            url: "/Parents/ActiveThe",
+            data: { IDThe: idthe },
+            success: function (r) {
+                if (r) {
+                    $('#grid').data('kendoGrid').dataSource.read();
+                }
+                else {
+                    bootbox.alert({
+                        message: "Thao tác chưa thành công!"
+                    })
+                }
+            },
+            error: function (err) {
+                bootbox.alert({
+                    message: "Thao tác chưa thành công!"
+                })
+            }
+        })
+    }
     $(document).ready(function () {
             var wnd = $("#ganhs")
                        .kendoWindow({
@@ -24,7 +58,7 @@
                            visible: false,
                            resizable: false,
                            width: 500,
-                           height: 100,
+                           height: 200,
                            scrollable: false,
                        }).data("kendoWindow");
             dataSource = new kendo.data.DataSource({
@@ -156,6 +190,8 @@
                     title: "Ngày sinh",
                     width: '10%'
                 }, {
+                    template: "#if( isActive =='Đã kích hoạt') {# <button id='active' onclick = \"changeColor(this,'#=IDThe#')\" class='button'>#= isActive#</button>#}" +
+                                "else{#<button id='active' class='button1' onclick = \"changeColor(this,'#=IDThe#')\">#= isActive#</button>#}#",
                     field: "isActive",
                     title: "Trạng thái",
                     width: '10%'
@@ -195,8 +231,6 @@
                                 }
                             }
                         });
-                       
-                        console.log($("#idlop").data("kendoComboBox").value());
 
                         $("#idhocsinh").kendoComboBox({
                             emptyText: "",
@@ -218,7 +252,7 @@
                         $("#idhocsinh").data("kendoComboBox").value("");
 
                     }
-                    },{ name: "edit", text: "Sửa" }, { name: "destroy", text: "Xóa" }], title: "Tác vụ", width: "20%" }]
+                    },{ name: "edit", text: "Sửa" }], title: "Tác vụ", width: "20%" }]
                 ,editable: {
                     mode: "popup",
                     template: kendo.template($("#popup_editor").html()),
@@ -234,7 +268,6 @@
                     record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
                 },
                 edit: function (e) {
-                    console.log(e);
                     if (e.model.id == 0) {
                         e.container.kendoWindow("title", "Tạo mới");
                         e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
@@ -268,6 +301,26 @@
                         format: "dd/MM/yyyy",
                         parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
                         dateInput: true
+                    });
+
+                    function readURL(input) {
+                        console.log(input.files);
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                if(e.target.result != null)
+                                    $('#image').attr('src', e.target.result);
+                            }
+
+                            reader.readAsDataURL(input.files[0]);
+                            console.log(input.files[0]);
+                        }
+                    }
+
+                    $("#uploadfile").change(function () {
+                        console.log(this);
+                        readURL(this);
                     });
                 }
             });
@@ -308,9 +361,60 @@
         $("#ganhs").data("kendoWindow").close();
     }
 
+    function searchphuhuynh() {
+
+        var ten = $("#tenphuhuynh").val();
+        var mathe = $("#mathe").val();
+
+        var data = {
+            "Ten": ten,
+            "MaThe": mathe
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Parents/DanhSachPHLoc",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (msg) {
+                var ds = new kendo.data.DataSource({
+                    data: msg
+                });
+
+                $('#grid').data('kendoGrid').setDataSource(ds);
+            },
+            error: function () {
+                $('#grid').data('kendoGrid').dataSource.read();
+                $('#grid').data('kendoGrid').refresh();
+            }
+        });
+    }
+        //$("#grid").data("kendoGrid").dataSource.data(d.data());
    //function importexcel() {
     //    //$("#import").kendoUpload();
     //}
+</script>
+
+
+<script type="text/x-kendo-template" id="toolbarloc">
+    `
+    <div class="row" style="margin-left: 5px">
+        <div class="col-sm-4" style="text-align:start">
+            <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
+            <a class="k-button" onclick="importexcel()"><span class="k-icon k-i-download"></span> ImportExcel</a>
+        </div>
+
+        <div class="col-sm-8" style="text-align:end">
+            <label class="required">Tên:</label>
+            <input id="tenphuhuynh" class="k-textbox" style="height:2.13em;" />
+
+            <label class="required">Mã thẻ:</label>
+            <input id="mathe" class="k-textbox" style="height:2.13em;" />
+
+            <a class="k-button" onclick="searchphuhuynh()"><span class="k-icon k-i-search"></span>Tìm kiếm</a>
+        </div>
+    </div>
 </script>
 
 
@@ -342,25 +446,28 @@
 
 
 <script type="text/x-kendo-template" id="toolbarloc">`
-    <div class="row" style="margin-left: 5px">
+    <div class="row"  style="margin-left: 5px">
         <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
-        <label>Tên:</label>
+        <label class="required">Tên:</label>
         <input class="k-textbox" style="height:2.13em;" />
     </div>
 </script>
 
-<div style="text-align:center"><input name="import" id="import" type="file" aria-label="files" /></div>
 
 <script id="popup_editor" type="text/x-kendo-template">
     <p>
         <div class="row" style="text-align:center; margin-bottom:10px">
-            <div class='customer-photo2' 
-                 style='background-image: url(#:Path#);'>
-            </div>
+            <img id="image" class='customer-photo2' src="#:Path#"/>
         </div>
 
-        <div class="row" style="text-align:center; margin-bottom:10px">
-            <div><input name="files" id="files" type="file" aria-label="files" /></div>
+        <div class="row" style="margin: 10px">
+            <div class="col-sm-5"></div>
+
+            <div class="col-sm-2">
+                <div> <input type="file" id="uploadfile"/></div>
+            </div>
+            
+            <div class="col-sm-5"></div>
         </div>
     </p>
 
@@ -476,8 +583,12 @@
 </style>
 
 <style>
-input.k-textbox
-{
-    height: 3.13em;
-}
+    label.required {
+        color: #FFFFFF;
+    }
+
+    input.k-textbox
+    {
+        height: 3.13em;
+    }
 </style>

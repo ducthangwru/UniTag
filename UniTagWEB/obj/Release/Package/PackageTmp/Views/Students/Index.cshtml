@@ -92,10 +92,7 @@
                         empty: "Kéo cột vào đây để nhóm "
                     }
                 },
-                toolbar: [{
-                    name: "create", text: "Thêm mới", click: function () {
-
-                    }}],
+                toolbar: kendo.template($("#toolbarloc").html()),
                 sortable: true,
                 pageable: {
                     refresh: true,
@@ -144,16 +141,19 @@
                 {
                     command:
                       [
-                          { name: "edit", text: "Sửa" },
-                          { name: "destroy", text: "Xóa" }
+                          { name: "edit", text: "Sửa" }
                       ],
-                    title: "Tác vụ", width: "20%"
+                    title: "Tác vụ", width: "10%"
                 }]
                 , editable: {
                     mode: "popup",
                     template: kendo.template($("#popup_editor").html()),
-                    window:{
-                        scrollable: false
+                    window: {
+                        scrollable: false,
+                        width: "800px",
+                        form: {
+                            width: "100%"
+                        }
                     }
                 },
                 dataBinding: function () {
@@ -191,7 +191,89 @@
                     });
                 }
             });
+
+            $("#grid").find("#chonlop").kendoDropDownList({
+                dataTextField: "Lop",
+                dataValueField: "IDLop",
+                autoBind: false,
+                dataSource: {
+                    severFiltering: true,
+                    transport: {
+                        read: {
+                            url: '@Url.Action("DanhSachLop", "Students")',
+                            dataType: 'jsonp',
+                            success: function (msg) {
+                                options.success(msg.d);
+                            }
+                        }
+                    }
+                },
+                //change: function () {
+                //    var value = this.value();
+                //    if (value) {
+                //        grid.data("kendoGrid").dataSource.filter({ field: "CategoryID", operator: "eq", value: parseInt(value) });
+                //    } else {
+                //        grid.data("kendoGrid").dataSource.filter({});
+                //    }
+                //}
+            });
         });
+
+    function searchhocsinh() {
+       
+        var ten = $("#tenhocsinh").val();
+        var id = $("#grid").find("#chonlop").data("kendoDropDownList").value();
+
+        var data = {
+            "Ten": ten,
+            "IDLop" : id
+        }
+        console.log(data);
+       
+        $.ajax({
+            type: "POST",
+            url: "/Students/DanhSachHocSinhLoc",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (msg) {
+                var ds = new kendo.data.DataSource({
+                    data: msg
+                });
+                console.log(ds);
+                $('#grid').data('kendoGrid').setDataSource(ds);
+            },
+            error: function () {
+                console.log("err");
+                $('#grid').data('kendoGrid').dataSource.read();
+                $('#grid').data('kendoGrid').refresh();
+            }
+        });
+        //$("#grid").data("kendoGrid").dataSource.data(d.data());
+        
+
+
+    }
+</script>
+
+<script type="text/x-kendo-template" id="toolbarloc">
+    `
+    <div class="row" style="margin-left: 5px">
+        <div class="col-sm-4" style="text-align:start">
+            <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
+            <a class="k-button" onclick="importexcel()"><span class="k-icon k-i-download"></span> ImportExcel</a>
+        </div>
+        
+        <div class="col-sm-8" style="text-align:end">
+            <label class="required">Tên:</label>
+            <input id ="tenhocsinh" class="k-textbox" style="height:2.13em;" />
+
+            <label class="required">Lớp:</label>
+            <input id="chonlop" style="width:20%; text-align:center" />
+
+            <a class="k-button" onclick="searchhocsinh()"><span class="k-icon k-i-search"></span>Tìm kiếm</a>
+        </div>
+    </div>
 </script>
 
 <script id="popup_editor" type="text/x-kendo-template">
@@ -281,5 +363,15 @@
         vertical-align: middle;
         line-height: 32px;
         padding-left: 3px;
+    }
+</style>
+
+<style>
+    label.required {
+        color: #FFFFFF;
+    }
+
+    input.k-textbox {
+        height: 3.13em;
     }
 </style>
