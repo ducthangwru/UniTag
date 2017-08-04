@@ -21,7 +21,7 @@ namespace UniTagDataAccess.DataAccess.Web
             try
             {
                 DataTable dt = db.ExecuteDataSet("sp_WebUniTag_DanhSachPhuHuynh").Tables[0];
-                foreach(DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
                     PhuHuynhWebOBJ obj = new PhuHuynhWebOBJ();
                     obj.ID = int.Parse(dr["ID"].ToString());
@@ -37,7 +37,7 @@ namespace UniTagDataAccess.DataAccess.Web
                     obj.isActive = (bool.Parse(dr["isActive"].ToString()) == true) ? "Đã kích hoạt" : "Chưa kích hoạt";
                     obj.TenHocSinh = "";
                     DataTable dt2 = db.ExecuteDataSet("sp_WebUniTag_DanhSachHocSinhTheoPhuHuynh", new SqlParameter("@IDPhuHuynh", obj.ID)).Tables[0];
-                    foreach(DataRow dr2 in dt2.Rows)
+                    foreach (DataRow dr2 in dt2.Rows)
                     {
                         obj.TenHocSinh += dr2["Ten"].ToString();
                     }
@@ -62,7 +62,7 @@ namespace UniTagDataAccess.DataAccess.Web
                     new SqlParameter("@Ten", Ten),
                     new SqlParameter("@MaThe", MaThe)
                 };
-            
+
                 DataTable dt = db.ExecuteDataSet("sp_WebUniTag_DanhSachPhuHuynh", param).Tables[0];
                 foreach (DataRow dr in dt.Rows)
                 {
@@ -95,18 +95,19 @@ namespace UniTagDataAccess.DataAccess.Web
             }
         }
 
-        public static bool Insert(PhuHuynhWebOBJ obj)
+        public static bool Insert(PhuHuynhWebOBJ obj, int idAnh)
         {
             string ngaysinh = "";
             try
             {
-                ngaysinh = DateTime.ParseExact(obj.NgaySinh, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                ngaysinh = DateTime.Parse(obj.NgaySinh).ToString("yyyy-MM-dd");
             }
             catch { }
 
             SqlParameter[] param = new SqlParameter[]
             {
                 new SqlParameter("@IDPhuHuynh", obj.ID),
+                new SqlParameter("@IDImage", idAnh),
                 new SqlParameter("@IDThe", obj.IDThe),
                 new SqlParameter("@TenPhuHuynh", obj.TenPhuHuynh),
                 new SqlParameter("@DiaChi", obj.DiaChi),
@@ -125,7 +126,7 @@ namespace UniTagDataAccess.DataAccess.Web
             {
                 ngaysinh = DateTime.ParseExact(obj.NgaySinh, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
             }
-            catch {  }
+            catch { }
 
             SqlParameter[] param = new SqlParameter[]
             {
@@ -169,7 +170,7 @@ namespace UniTagDataAccess.DataAccess.Web
 
                 return db.ExecuteNonQuery("sp_WebUniTag_GanMoiQuanHePHHS", param) > 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -179,5 +180,30 @@ namespace UniTagDataAccess.DataAccess.Web
         {
             return db.ExecuteNonQuery("sp_WebUniTag_ActiveThePhuHuynh", new SqlParameter("@IDThe", IDThe)) > 0;
         }
+        public static bool UpdateAnhPhuHuynh(string path, int idPH)
+        {
+            try
+            {
+
+                string time = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                SqlParameter[] param = new SqlParameter[]{
+                    new SqlParameter("@path", path),
+                    new SqlParameter("@thoigianchup", time)
+                };
+                int idAnh = int.Parse(db.ExecuteScalar("sp_AppUniTag_ThemAnh", param).ToString());
+                SqlParameter[] param1 = new SqlParameter[]{
+                    new SqlParameter("@IDPhuHuynh", idPH),
+                    new SqlParameter("@IDImage", idAnh)
+                };
+                return db.ExecuteNonQuery("sp_WebUniTag_UpdateImagePhuHuynh", param1) > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+        }
     }
 }
+

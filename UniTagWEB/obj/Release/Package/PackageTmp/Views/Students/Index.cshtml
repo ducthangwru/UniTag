@@ -2,6 +2,12 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .k-edit-form-container {
+        position: relative;
+        width: 100%;
+    }
+</style>
 <script src="~/data/Data.js"></script>
 <h2 style="margin-top:10px;">Danh sách học sinh</h2>
 <div id="example" style="margin-top:30px;">
@@ -10,115 +16,117 @@
 </div>
 
 <script>
-        $(document).ready(function () {
-            dataSource = new kendo.data.DataSource({
-                autoSync: false,
-                transport: {
-                    read: {
-                        url: "/Students/DanhSachHS",
-                            dataType: 'jsonp',
-                            success: function (msg) {
-                                options.success(msg.d);
-                            }
-                    },
-                    create: {
-                            url: "/Students/Insert",
-                            dataType: "jsonp",
-                            success: function (msg) {
-                                $('#grid').data('kendoGrid').dataSource.read();
-                                $('#grid').data('kendoGrid').refresh();
-                            },
-                            error: function () {
-                                $('#grid').data('kendoGrid').dataSource.read();
-                                $('#grid').data('kendoGrid').refresh();
-                            }                       
-                    },
-                    update: {
-                        url: "/Students/Update",
-                        dataType: "jsonp",
-                        success: function (msg) {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        },
-                        error: function () {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        }
-                    },
-                    destroy: {
-                        url: '@Url.Action("Delete", "Students")',
-                        dataType: "jsonp",
-                        success: function (msg) {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        },
-                        error: function () {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        }
-                    },
-                    parameterMap: function (options, operation) {
-                        if (operation !== "read" && options.models) {
-                            return { models: kendo.stringify(options.models) };
-                        }
+    $(document).ready(function () {
+        dataSource = new kendo.data.DataSource({
+            autoSync: false,
+            transport: {
+                read: {
+                    url: "/Students/DanhSachHS",
+                    dataType: 'jsonp',
+                    success: function (msg) {
+                        options.success(msg.d);
                     }
                 },
-                batch: true,
-                pageSize: 10,
-                schema: {
-                    model: {
-                        id: "ID",
-                        fields: {
-                            ID: { editable: false, nullable: false, defaultValue: 0 },
-                            //IDImage: { editable: false, nullable: true},
-                            IDLop: { editable: true, nullable: true},
-                            Ten: { editable: true, nullable: true},
-                            NgaySinh: { editable: true, nullable: true},
-                            GioiTinh: { editable: true, nullable: true },
-                            DiaChi: { editable: true, nullable: true },
-                            Path: { editable: false, nullable: true},
-                            Lop: { editable: false, nullable: true }
-                        }
+                create: {
+                    url: "/Students/Insert",
+                    dataType: "jsonp",
+                    success: function (msg) {
+                        console.log(11111111);
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    },
+                    error: function () {
+                        console.log("error");
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    }
+                },
+                update: {
+                    url: "/Students/Update",
+                    dataType: "jsonp",
+                    success: function (msg) {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    },
+                    error: function () {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    }
+                },
+                destroy: {
+                    url: '@Url.Action("Delete", "Students")',
+                    dataType: "jsonp",
+                    success: function (msg) {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    },
+                    error: function () {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    }
+                },
+                parameterMap: function (options, operation) {
+                    if (operation !== "read" && options.models) {
+                        return { models: kendo.stringify(options.models) };
                     }
                 }
-            });
+            },
+            batch: true,
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "ID",
+                    fields: {
+                        ID: { editable: true, nullable: false, defaultValue: 0 },
+                        IDImage: { editable: true, nullable: true, defaultValue: 0 },
+                        IDLop: { editable: true, nullable: true },
+                        Ten: { editable: true, nullable: true },
+                        NgaySinh: { editable: true, nullable: true },
+                        GioiTinh: { editable: true, nullable: true },
+                        DiaChi: { editable: true, nullable: true },
+                        Path: { editable: true, nullable: false, type:"string", defaultValue: "@(string.Format("{0}/Images/ImagesHocSinh/03082017103653.png", UniTagDataAccess.Utils.Utils.BASEURL))" },
+                        Lop: { editable: true, nullable: true }
+                    }
+                }
+            }
+        });
 
 
-            $("#grid").kendoGrid({
-                dataSource: dataSource,
-                height: 550,
-                groupable: {
-                    messages: {
-                        empty: "Kéo cột vào đây để nhóm "
-                    }
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            height: 550,
+            groupable: {
+                messages: {
+                    empty: "Kéo cột vào đây để nhóm "
+                }
+            },
+            toolbar: kendo.template($("#toolbarloc").html()),
+            sortable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: [5, 10, 15, "Tất cả"],
+                buttonCount: 5,
+                messages: {
+                    itemsPerPage: "số trẻ trên trang",
+                    display: "Hiển thị {0}-{1} của {2} trẻ",
+                    empty: "Không có dữ liệu",
+                    allPages: "Hiển thị tất cả",
+                    page: "Nhập trang",
+                    of: "của {0}",
+                    first: "Trang đầu",
+                    previous: "Trang trước",
+                    next: "Trang kế tiếp",
+                    last: "Trang cuối",
+                    refresh: "Làm mới"
+                }
+            },
+            columns: [
+                {
+                    title: "STT",
+                    template: "#= ++record #",
+                    width: '5%'
                 },
-                toolbar: kendo.template($("#toolbarloc").html()),
-                sortable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: [5, 10, 15, "Tất cả"],
-                    buttonCount: 5,
-                    messages: {
-                        itemsPerPage: "số trẻ trên trang",
-                        display: "Hiển thị {0}-{1} của {2} trẻ",
-                        empty: "Không có dữ liệu",
-                        allPages: "Hiển thị tất cả",
-                        page: "Nhập trang",
-                        of: "của {0}",
-                        first: "Trang đầu",
-                        previous: "Trang trước",
-                        next: "Trang kế tiếp",
-                        last: "Trang cuối",
-                        refresh: "Làm mới"
-                    }
-                },
-                columns: [
-                    {
-                        title: "STT",
-                        template: "#= ++record #",
-                        width: '5%'
-                    },
-                    {
+                {
                     template: "<div class='customer-photo'" +
                                     "style='background-image: url(#:Path#);'></div>" +
                                 "<div class='customer-name'>#: Ten #</div>",
@@ -128,6 +136,7 @@
                 }, {
                     field: "NgaySinh",
                     title: "Ngày sinh",
+                    format: "{0: dd/MM/yyyy}",
                     width: '10%'
                 }, {
                     field: "GioiTinh",
@@ -138,98 +147,171 @@
                     title: "Lớp",
                     width: '10%'
                 },
-                {
-                    command:
-                      [
-                          { name: "edit", text: "Sửa" }
-                      ],
-                    title: "Tác vụ", width: "10%"
-                }]
-                , editable: {
-                    mode: "popup",
-                    template: kendo.template($("#popup_editor").html()),
-                    window: {
-                        scrollable: false,
-                        width: "800px",
-                        form: {
-                            width: "100%"
-                        }
+            {
+                command:
+                  [
+                      { name: "edit", text: "Sửa" }
+                  ],
+                title: "Tác vụ", width: "10%"
+            }]
+            , editable: {
+                mode: "popup",
+                template: kendo.template($("#popup_editor").html()),
+                window: {
+                    scrollable: false,
+                    width: "800px",
+                    form: {
+                        width: "100%"
                     }
-                },
-                dataBinding: function () {
-                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
-                },
-                edit: function (e) {
-                    console.log(e);
-                    if (e.model.ID == null) {
-                        e.container.kendoWindow("title", "Tạo mới");
-                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
-                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
-                    } else {
-                        e.container.kendoWindow("title", "Chỉnh sửa");
-                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
-                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
-                    }
-
-                    $("#gioitinh").kendoComboBox();
-
-                    $("#lop").kendoComboBox({
-                        emptyText: "",
-                        dataTextField: "Lop",
-                        dataValueField: "IDLop",
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "/Students/DanhSachLop",
-                                    dataType: 'jsonp',
-                                    success: function (msg) {
-                                        options.success(msg.d);
-                                    }
-                                },
-                            }
-                        }
-                    });
                 }
-            });
+            },
+            dataBinding: function () {
+                record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+            },
+            edit: function (e) {
+                var item = e.model;
+                console.log(item);
+                if (e.model.id == null || e.model.id == 0) {
+                    e.container.kendoWindow("title", "Tạo mới");
+                    e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
+                    e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                } else {
+                    e.container.kendoWindow("title", "Chỉnh sửa");
+                    e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
+                    e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                }
+                var idHS = e.model.id;
+                var src;
+                $(".k-button.k-grid-update").click(function (e) {
+                    var url;
+                    if (idHS == 0) {
 
-            $("#grid").find("#chonlop").kendoDropDownList({
-                dataTextField: "Lop",
-                dataValueField: "IDLop",
-                autoBind: false,
-                dataSource: {
-                    severFiltering: true,
-                    transport: {
-                        read: {
-                            url: '@Url.Action("DanhSachLop", "Students")',
-                            dataType: 'jsonp',
-                            success: function (msg) {
-                                options.success(msg.d);
+                        $.ajax({
+                            type: "POST",
+                            url: "/Students/ThemAnhHocSinh",
+                            dataType: 'json',
+                            data: JSON.stringify({ "base64": src }),
+                            contentType: "application/json; charset=utf-8",
+                            success: function (res) {
+                                if (res != 0) {
+                                    console.log(res);
+                                    console.log(item);
+                                }
                             }
-                        }
+                        })
                     }
-                },
-                //change: function () {
-                //    var value = this.value();
-                //    if (value) {
-                //        grid.data("kendoGrid").dataSource.filter({ field: "CategoryID", operator: "eq", value: parseInt(value) });
-                //    } else {
-                //        grid.data("kendoGrid").dataSource.filter({});
-                //    }
-                //}
-            });
+                    else {
+                        var data = {
+                            "base64": src,
+                            "idHS": idHS
+                        };
+                        console.log(idHS);
+                        $.ajax({
+                            type: "POST",
+                            url: "/Students/UpdateHocSinh",
+                            dataType: 'json',
+                            data: JSON.stringify(data),
+                            contentType: "application/json; charset=utf-8",
+                            success: function (res) {
+                                if (res) {
+                                    console.log("success");
+                                    $('#grid').data('kendoGrid').dataSource.read();
+                                }
+                                else {
+
+                                }
+                            }
+                        })
+                    }
+                })
+
+                $("#gioitinh").kendoComboBox({
+                    dataSource: [
+                        "Nam","Nữ"
+                    ]
+                    //dataTextField: "text",
+                    //dataValueField: "text"
+                });
+
+                $("#idlop").kendoComboBox({
+                    emptyText: "",
+                    dataTextField: "Lop",
+                    dataValueField: "IDLop",
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "/Students/DanhSachLop",
+                                dataType: 'jsonp',
+                                success: function (msg) {
+                                    options.success(msg.d);
+                                }
+                            },
+                        }
+                    },
+                    change: function () {
+                        item.set("Lop", $("#idlop").data("kendoComboBox").text());
+                    }
+                });
+               
+                $("#datepicker").kendoDatePicker({
+                    format: "dd/MM/yyyy",
+                    parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
+                    dateInput: true
+                });
+                function readURL(input) {
+                    console.log(input.files);
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            if (e.target.result != null)
+                                $('#image').attr('src', e.target.result);
+                            src = e.target.result;
+                        }
+
+                        reader.readAsDataURL(input.files[0]);
+                        console.log(input.files[0]);
+                    }
+                }
+
+                $("#uploadfile").change(function () {
+                    console.log(this);
+                    readURL(this);
+                });
+            }
         });
 
+        $("#grid").find("#chonlop").kendoDropDownList({
+            dataTextField: "Lop",
+            dataValueField: "IDLop",
+            autoBind: false,
+            dataSource: {
+                severFiltering: true,
+                transport: {
+                    read: {
+                        url: '@Url.Action("DanhSachLop", "Students")',
+                        dataType: 'jsonp',
+                        success: function (msg) {
+                            options.success(msg.d);
+                        }
+                    }
+                }
+            },
+
+        });
+    });
+
     function searchhocsinh() {
-       
+
         var ten = $("#tenhocsinh").val();
         var id = $("#grid").find("#chonlop").data("kendoDropDownList").value();
 
         var data = {
             "Ten": ten,
-            "IDLop" : id
+            "IDLop": id
         }
         console.log(data);
-       
+
         $.ajax({
             type: "POST",
             url: "/Students/DanhSachHocSinhLoc",
@@ -250,23 +332,22 @@
             }
         });
         //$("#grid").data("kendoGrid").dataSource.data(d.data());
-        
+
 
 
     }
 </script>
 
 <script type="text/x-kendo-template" id="toolbarloc">
-    `
     <div class="row" style="margin-left: 5px">
         <div class="col-sm-4" style="text-align:start">
             <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
             <a class="k-button" onclick="importexcel()"><span class="k-icon k-i-download"></span> ImportExcel</a>
         </div>
-        
+
         <div class="col-sm-8" style="text-align:end">
             <label class="required">Tên:</label>
-            <input id ="tenhocsinh" class="k-textbox" style="height:2.13em;" />
+            <input id="tenhocsinh" class="k-textbox" style="height:2.13em;" />
 
             <label class="required">Lớp:</label>
             <input id="chonlop" style="width:20%; text-align:center" />
@@ -278,68 +359,77 @@
 
 <script id="popup_editor" type="text/x-kendo-template">
     <p>
-        <div class="row" style="text-align:center">
-            <div class='customer-photo'style='background-image: url(#:Path#);'></div>
-            <input name="files" id="files" type="file" aria-label="files" style="text-align:center"/>
+        <div class="row" style="text-align:center; margin-bottom:10px">
+            <img id="image" class="customer-photo2" src="#:Path#"/>
+        </div>
+
+        <div class="row" style="margin: 10px">
+            <div class="col-sm-5"></div>
+
+            <div class="col-sm-2">
+                <div> <input type="file" id="uploadfile" /></div>
+            </div>
+
+            <div class="col-sm-5"></div>
         </div>
     </p>
 
     <p>
-        <div class="row" style="margin-left: 5px">
-            <div class="col-sm-4" style="margin-top: 5px">
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
                 <label> Tên học sinh: </label>
             </div>
-            <div class="col-sm-2">
-                <input class="k-textbox" data-bind="value: Ten" data-source="dataSource" type="text" />
+            <div class="col-sm-4">
+                <input class="k-textbox" style="width:230px;" data-bind="value: Ten" data-source="dataSource" type="text" />
             </div>
         </div>
     </p>
     <p>
-        <div class="row" style="margin-left: 5px">
-            <div class="col-sm-4" style="margin-top: 5px">
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
                 <label> Ngày sinh: </label>
             </div>
-            <div class="col-sm-2">
-                <input class="k-textbox" data-bind="value: NgaySinh" data-source="dataSource" type="text" />
+            <div class="col-sm-4">
+                <input id="datepicker" data-source="dataSource" data-bind="value: NgaySinh" value="10/10/2011" style="width: 230px" type="date" />
             </div>
         </div>
     </p>
     <p>
-        <div class="row" style="margin-left: 5px">
-            <div class="col-sm-4" style="margin-top: 5px">
-                <label> Địa Chỉ: </label>
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
+                <label> Địa chỉ: </label>
             </div>
-            <div class="col-sm-2">
-                <input class="k-textbox" data-bind="value: DiaChi" data-source="dataSource" type="text" />
+            <div class="col-sm-4">
+                <input class="k-textbox" style="width:230px;" data-bind="value:DiaChi" data-source="dataSource" type="text" />
             </div>
         </div>
     </p>
     <p>
-        <div class="row" style="margin-left: 5px">
-            <div class="col-sm-4" style="margin-top: 5px">
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 10px">
                 <label> Giới tính: </label>
             </div>
-            <div class="col-sm-6">
-               <select id="gioitinh" placeholder="Chọn giới tính..." data-bind="value: GioiTinh" data-source="dataSource" style="width: 88%;" >
-                      <option>Nam</option>
-                      <option>Nữ</option>
-                      <option>Khác</option>
-               </select>
+            <div class="col-sm-4">
+                <input id="gioitinh" data-source="dataSource" placeholder="Chọn giới tính..." style="width: 230px;" data-bind="value:GioiTinh">
+                    
             </div>
         </div>
     </p>
     <p>
-        <div class="row" style="margin-left: 5px">
-            <div class="col-sm-4" style="margin-top: 5px">
+        <div class="row" style="margin-left: 5px;  margin-bottom:10px">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="margin-top: 5px">
                 <label> Lớp: </label>
             </div>
-            <div class="col-sm-6">
-                <input id="lop" data-bind="value: IDLop" placeholder="Chọn lớp..." style="width: 88%" />
+            <div class="col-sm-4">
+                <input id="idlop" data-bind="value: IDLop"  data-source="dataSource" placeholder="Chọn lớp..." style="width: 230px" />
+                <h1 id="lop" data-source="dataSource" data-bind="value: Lop" hidden></h1>
             </div>
         </div>
-    </p>
-    <p>
-        <input class="k-textbox" data-bind="value: ID" data-source="dataSource" type="hidden" />
     </p>
 
 </script>
@@ -373,5 +463,18 @@
 
     input.k-textbox {
         height: 3.13em;
+    }
+
+    .customer-photo2 {
+        display: inline-block;
+        width: 120px;
+        height: 150px;
+        border-radius: 0%;
+        background-size: 120px 150px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 150px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
     }
 </style>

@@ -3154,6 +3154,9 @@ table.k-widget {
     width: calc( 10px + 1.42855Am);
     height: calc( 10px + 1.42855Am);
     padding: 4px; }
+  .k-button-icon1{
+      height: calc( 10px + 1.42855Am);
+  }
   .k-compact .k-button, .k-button.k-compact {
     padding: 2px 4px;
     font-size: 12px; }

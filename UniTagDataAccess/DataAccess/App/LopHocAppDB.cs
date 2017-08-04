@@ -18,7 +18,7 @@ namespace UniTagDataAccess.DataAccess.App
         public static string ThongTinSiSoTheoCaDuaDon(int CaDuaDon, int IDHocSinh, int IDLop, string ThoiGianCheckin)
         {
             int siso = int.Parse(db.ExecuteScalar("sp_AppUniTag_SiSoLopCuaHocSinh", new SqlParameter("@idhs", IDHocSinh)).ToString());
-
+            int sisodd = int.Parse(db.ExecuteScalar("sp_AppUniTag_SiSoTrongLopCuaHocSinh", new SqlParameter("@idhs", IDHocSinh), new SqlParameter("@date", ThoiGianCheckin)).ToString());
             SqlParameter[] param = new SqlParameter[]
             {
                 new SqlParameter("@idca", CaDuaDon),
@@ -32,7 +32,7 @@ namespace UniTagDataAccess.DataAccess.App
                 return sisohientai + "/" + siso;
 
 
-            return (siso - sisohientai) + "/" + siso;
+            return (sisodd - sisohientai) + "/" + siso;
 
         }
 

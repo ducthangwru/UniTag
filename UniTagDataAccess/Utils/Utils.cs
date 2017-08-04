@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -105,7 +106,7 @@ namespace UniTagDataAccess.Utils
             //return the Clear decrypted TEXT
             return UTF8Encoding.UTF8.GetString(resultArray);
         }
-        public static string base_url()
+        private static string base_url()
         {
             try
             {
@@ -122,6 +123,6 @@ namespace UniTagDataAccess.Utils
                 return "";
             }
         }
-
+        
     }
 }

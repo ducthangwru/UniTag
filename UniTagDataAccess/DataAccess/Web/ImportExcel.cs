@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace UniTagDataAccess.DataAccess.Web
 {
@@ -16,15 +17,11 @@ namespace UniTagDataAccess.DataAccess.Web
     {
         public static SqlDataHelpers db = new SqlDataHelpers();
         public ImportExcel() { }
-        public static DataTable ExcelToDataTable(string filePath)
+        public static DataTable ExcelToDataTable(HttpPostedFileBase upload)
         {
             DataTable dt = new DataTable();
-
-            HSSFWorkbook hssfworkbook;
-            using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                hssfworkbook = new HSSFWorkbook(file);
-            }
+            Stream stream = upload.InputStream;
+            HSSFWorkbook hssfworkbook = new HSSFWorkbook(stream);
             ISheet sheet = hssfworkbook.GetSheetAt(0);
             System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
 
@@ -56,11 +53,11 @@ namespace UniTagDataAccess.DataAccess.Web
             return dt;
         }
 
-        public static bool ImportExcelPhuHuynh(string filepath)
+        public static bool ImportExcelPhuHuynh(HttpPostedFileBase upload)
         {
             try
             {
-                DataTable dt = ExcelToDataTable(filepath);
+                DataTable dt = ExcelToDataTable(upload);
                 foreach (DataRow dr in dt.Rows)
                 {
                     int idmqh = 0;
@@ -95,11 +92,11 @@ namespace UniTagDataAccess.DataAccess.Web
            
         }
 
-        public static bool ImportExcelHocSinh(string filepath)
+        public static bool ImportExcelHocSinh(HttpPostedFileBase upload)
         {
             try
             {
-                DataTable dt = ExcelToDataTable(filepath);
+                DataTable dt = ExcelToDataTable(upload);
                 foreach (DataRow dr in dt.Rows)
                 {
                     int idmqh = 0;

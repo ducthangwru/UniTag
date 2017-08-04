@@ -3,16 +3,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    .k-edit-form-container{
-            position: relative;
-    width: 100%;
+    .k-edit-form-container {
+        position: relative;
+        width: 100%;
     }
+
     .button {
-        background-color: #4CAF50;
+        background-color: #3f51b5;
+        border: 1px;
+        color: #ffffff;
+        text-align: center;
     }
 
     .button1 {
-        background-color: #ffffff;
+        background-color: #ff0000;
+        border: 1px;
+        color: #ffffff;
+        text-align: center;
     }
 </style>
 <script src="~/data/Data.js"></script>
@@ -25,147 +32,169 @@
 <script>
     function changeColor(arg, idthe) {
         console.log(idthe);
+        var data = { "IDThe": idthe }
         $.ajax({
             type: "GET",
             url: "/Parents/ActiveThe",
-            data: { IDThe: idthe },
+            data: data,
             success: function (r) {
                 if (r) {
                     $('#grid').data('kendoGrid').dataSource.read();
+                    console.log(data);
                 }
                 else {
-                    bootbox.alert({
-                        message: "Thao tác chưa thành công!"
-                    })
+                    bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
+                        'left': '0px',
+                        'color': '#F00',
+                    });
                 }
             },
             error: function (err) {
-                bootbox.alert({
-                    message: "Thao tác chưa thành công!"
-                })
+                bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
+                    'left': '0px',
+                    'color': '#F00',
+                });
             }
         })
     }
-    $(document).ready(function () {
-            var wnd = $("#ganhs")
-                       .kendoWindow({
-                           title: "Gán mối quan hệ HS - PH",
-                           modal: true,
-                           visible: false,
-                           resizable: false,
-                           width: 500,
-                           height: 200,
-                           scrollable: false,
-                       }).data("kendoWindow");
-            dataSource = new kendo.data.DataSource({
+    function changeIDLop(e) {
+        console.log($("#idlop").data("kendoComboBox").value());
+        $("#idhocsinh").kendoComboBox({
+            emptyText: "",
+            dataTextField: "TenHocSinh",
+            dataValueField: "IDHocSinh",
+            dataSource: {
                 transport: {
                     read: {
-                            url: '@Url.Action("DanhSachPH", "Parents")',
-                            dataType: 'jsonp',
-                            success: function (msg) {
-                                options.success(msg.d);
-                            }
-                    },
-                    create: {
-                        url: '@Url.Action("Insert", "Parents")',
-                        dataType: 'jsonp',
+                        type: "POST",
+                        url: "/Parents/DanhSachHocSinh",
+                        dataType: 'json',
+                        data: { idlop: $("#idlop").data("kendoComboBox").value() },
                         success: function (msg) {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        },
-                        error: function () {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        }
-                    },
-                    update :{
-                        url: '@Url.Action("Update", "Parents")',
-                        dataType: 'jsonp',
-                        success: function (msg) {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        },
-                        error: function () {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        }
-                    },
-                    destroy: {
-                        url: '@Url.Action("Delete", "Parents")',
-                        dataType: 'jsonp',
-                        success: function (msg) {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        },
-                        error: function () {
-                            $('#grid').data('kendoGrid').dataSource.read();
-                            $('#grid').data('kendoGrid').refresh();
-                        }
-                    },
-                    parameterMap: function (options, operation) {
-                        if (operation !== "read" && options.models) {
-                            return { models: kendo.stringify(options.models) };
-                        }
-                    }
-                },
-                batch: true,
-                pageSize: 10,
-                schema: {
-                    model: {
-                        id: "ID",
-                        fields: {
-                            ID: { editable: false, nullable: false, defaultValue: 0 },
-                            IDThe: { editable: true, nullable: false },
-                            IDImage: { editable: false, nullable: true },
-                            IDMoiQuanHe: { editable: true, nullable: false },
-                            TenPhuHuynh: { editable: true, nullable: false },
-                            TenMoiQuanHe: { editable: true, nullable: false },
-                            NgaySinh: { editable: true, nullable: false},
-                            GioiTinh: { editable: true, nullable: false },
-                            DiaChi: { editable: true, nullable: false },
-                            Path: { teditable: true, nullable: true },
-                            isActive: { editable: true, nullable: true }
+                            options.success(msg.d);
                         }
                     }
                 }
-            });
-
-
-            $("#grid").kendoGrid({
-                dataSource: dataSource,
-                height: 550,
-                groupable: {
-                    messages: {
-                        empty: "Kéo cột vào đây để nhóm "
+            }
+        });
+        $("#idhocsinh").data("kendoComboBox").value("");
+    }
+    $(document).ready(function () {
+        $("#ganhs").hide();
+        var wd = $("#window").kendoWindow({
+            width: "600px",
+            title: "Thêm dữ liệu từ Excel",
+            visible: false
+        }).data("kendoWindow").center();
+        dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: '@Url.Action("DanhSachPH", "Parents")',
+                    dataType: 'jsonp',
+                    success: function (msg) {
+                        options.success(msg.d);
                     }
                 },
-                toolbar: kendo.template($("#toolbarloc").html()),
-                sortable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: [5, 10, 15, "Tất cả"],
-                    buttonCount: 5,
-                    messages: {
-                        itemsPerPage: "số phụ huynh trên trang",
-                        display: "Hiển thị {0}-{1} của {2} phụ huynh",
-                        empty: "Không có dữ liệu",
-                        allPages: "Hiển thị tất cả",
-                        page: "Nhập trang",
-                        of: "của {0}",
-                        first: "Trang đầu",
-                        previous: "Trang trước",
-                        next: "Trang kế tiếp",
-                        last: "Trang cuối",
-                        refresh: "Làm mới"
-                    }
-                },
-                columns: [
-                    {
-                        title: "STT",
-                        template: "#= ++record #",
-                        width: '5%'
+                create: {
+                    url: '@Url.Action("Insert", "Parents")',
+                    dataType: 'jsonp',
+                    success: function (msg) {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
                     },
-                    {
+                    error: function () {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    }
+                },
+                update: {
+                    url: '@Url.Action("Update", "Parents")',
+                    dataType: 'jsonp',
+                    success: function (msg) {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    },
+                    error: function () {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    }
+                },
+                destroy: {
+                    url: '@Url.Action("Delete", "Parents")',
+                    dataType: 'jsonp',
+                    success: function (msg) {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    },
+                    error: function () {
+                        $('#grid').data('kendoGrid').dataSource.read();
+                        $('#grid').data('kendoGrid').refresh();
+                    }
+                },
+                parameterMap: function (options, operation) {
+                    if (operation !== "read" && options.models) {
+                        return { models: kendo.stringify(options.models) };
+                    }
+                }
+            },
+            batch: true,
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "ID",
+                    fields: {
+                        ID: { editable: false, nullable: false, defaultValue: 0 },
+                        IDThe: { editable: true, nullable: false },
+                        IDImage: { editable: false, nullable: false, defaultValue: 0 },
+                        IDMoiQuanHe: { editable: true, nullable: false },
+                        TenPhuHuynh: { editable: true, nullable: false },
+                        TenMoiQuanHe: { editable: true, nullable: false },
+                        NgaySinh: { editable: true, nullable: false },
+                        GioiTinh: { editable: true, nullable: false },
+                        DiaChi: { editable: true, nullable: false },
+                        Path: { teditable: true, nullable: false, type:"string", defaultValue: "@(string.Format("{0}/Images/ImagesHocSinh/03082017103653.png", UniTagDataAccess.Utils.Utils.BASEURL))"  },
+                        isActive: { editable: true, nullable: false, defaultValue: "Chưa kích hoạt" }
+                    }
+                }
+            }
+        });
+
+
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            height: 550,
+            groupable: {
+                messages: {
+                    empty: "Kéo cột vào đây để nhóm "
+                }
+            },
+            toolbar: kendo.template($("#toolbarloc").html()),
+            sortable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: [5, 10, 15, "Tất cả"],
+                buttonCount: 5,
+                messages: {
+                    itemsPerPage: "số phụ huynh trên trang",
+                    display: "Hiển thị {0}-{1} của {2} phụ huynh",
+                    empty: "Không có dữ liệu",
+                    allPages: "Hiển thị tất cả",
+                    page: "Nhập trang",
+                    of: "của {0}",
+                    first: "Trang đầu",
+                    previous: "Trang trước",
+                    next: "Trang kế tiếp",
+                    last: "Trang cuối",
+                    refresh: "Làm mới"
+                }
+            },
+            columns: [
+                {
+                    title: "STT",
+                    template: "#= ++record #",
+                    width: '5%'
+                },
+                {
                     template: "<div class='customer-photo'" +
                                     "style='background-image: url(#:Path#);'></div>" +
                                 "<div class='customer-name'>#: TenPhuHuynh #</div>",
@@ -184,6 +213,7 @@
                 }, {
                     field: "NgaySinh",
                     title: "Ngày sinh",
+                    format: "{0: dd/MM/yyyy}",
                     width: '10%'
                 }, {
                     template: "#if( isActive =='Đã kích hoạt') {# <a role='button' id='active' onclick = \"changeColor(this,'#=IDThe#')\" class='k-button k-button-icontext button'>#= isActive#</a>#}" +
@@ -192,11 +222,10 @@
                     title: "Trạng thái",
                     width: '12%'
                 },
-                { command: [{
-                    text: "Gán", click: function (e)
-                    {
+            {
+                command: [{
+                    text: "Gán", click: function (e) {
                         e.preventDefault();
-
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         $("#idphuhuynh").val(dataItem.ID);
                         var wnd = $("#ganhs")
@@ -206,7 +235,7 @@
                                visible: false,
                                resizable: false,
                                width: 500,
-                               height: 100,
+                               height: 200,
                                scrollable: false,
                            }).data("kendoWindow");
                         wnd.center().open();
@@ -227,129 +256,182 @@
                                 }
                             }
                         });
-
                         $("#idhocsinh").kendoComboBox({
                             emptyText: "",
-                            dataTextField: "TenHocSinh",
-                            dataValueField: "IDHocSinh",
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "/Parents/DanhSachHocSinh",
-                                        dataType: 'jsonp',
-                                        success: function (msg) {
-                                            options.success(msg.d);
-                                        }
-                                    }
-                                }
-                            }
                         });
                         $("#idlop").data("kendoComboBox").value("");
                         $("#idhocsinh").data("kendoComboBox").value("");
-
+                        var combobox = $("#idlop").data("kendoComboBox");
+                        combobox.bind("change", changeIDLop);
                     }
-                    },{ name: "edit", text: "Sửa" }], title: "Tác vụ", width: "18%" }]
-                ,editable: {
-                    mode: "popup",
-                    template: kendo.template($("#popup_editor").html()),
-                    window:{
-                        scrollable: false,
-                        width: "800px",
-                        form:{
-                            width:"100%"
-                        }
+                }, { name: "edit", text: "Sửa" }], title: "Tác vụ", width: "18%"
+            }]
+            , editable: {
+                mode: "popup",
+                template: kendo.template($("#popup_editor").html()),
+                window: {
+                    scrollable: false,
+                    width: "800px",
+                    form: {
+                        width: "100%"
                     }
-                },
-                dataBinding: function () {
-                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
-                },
-                edit: function (e) {
-                    if (e.model.id == 0) {
-                        e.container.kendoWindow("title", "Tạo mới");
-                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
-                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
-                    } else {
-                        e.container.kendoWindow("title", "Chỉnh sửa");
-                        e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
-                        e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
-                    }
-                    
-                    $("#gioitinh").kendoComboBox();
-
-                    $("#moiqh").kendoComboBox({
-                        emptyText: " ",
-                        dataTextField: "TenMoiQuanHe",
-                        dataValueField: "ID",
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: '@Url.Action("DanhSachMoiQH", "Parents")',
-                                    dataType: 'jsonp',
-                                    success: function (msg) {
-                                        options.success(msg.d);
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-                    $("#datepicker").kendoDatePicker({
-                        format: "dd/MM/yyyy",
-                        parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
-                        dateInput: true
-                    });
-
-                    function readURL(input) {
-                        console.log(input.files);
-                        if (input.files && input.files[0]) {
-                            var reader = new FileReader();
-
-                            reader.onload = function (e) {
-                                if(e.target.result != null)
-                                    $('#image').attr('src', e.target.result);
-                            }
-
-                            reader.readAsDataURL(input.files[0]);
-                            console.log(input.files[0]);
-                        }
-                    }
-
-                    $("#uploadfile").change(function () {
-                        console.log(this);
-                        readURL(this);
-                    });
                 }
-            });
+            },
+            dataBinding: function () {
+                record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+            },
+            edit: function (e) {
+                e.preventDefault();
+                var item = e.model;
+                var src;
+                if (e.model.id == 0) {
+                    e.container.kendoWindow("title", "Tạo mới");
+                    e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Tạo mới"); //update button
+                    e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                } else {
+                    e.container.kendoWindow("title", "Chỉnh sửa");
+                    e.container.find(".k-button.k-grid-update").html("<span class='k-icon k-i-check'></span>Cập nhật"); //update button
+                    e.container.find(".k-button.k-grid-cancel").html("<span class='k-icon k-i-cancel'></span>Hủy"); //cancel button
+                }
+                var idPH = e.model.id;
+                $(".k-button.k-grid-update").click(function (e) {
+                    var data, url;
+                    if (idPH == 0) {
+                        url = "/Parents/ThemAnhPhuHuynh";
+                        data = {
+                            "base64": src
+                        }
+                    }
+                    else {
+                        url = "/Parents/UpdatePhuHuynh";
+                        data = {
+                            "base64": src,
+                            "idPH": idPH
+                        };
+                    }
+                    console.log(idPH);
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        success: function (res) {
+                            if (res === true) {
+                                console.log("success");
+                                $('#grid').data('kendoGrid').dataSource.read();
+                            }
+                            else {
+                                if (res === 0) {
+                                    bootbox.alert('Vui lòng tải ảnh định dạng .jpg, .png, .gif và kích thước ảnh tối đa 1 MB!').find('div.modal-dialog').css({
+                                        'left': '0px',
+                                        'color': '#F00',
+                                    });
+                                }
+                                else {
+                                    bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
+                                        'left': '0px',
+                                        'color': '#F00',
+                                    });
+                                }
+                            }
+                        },
+                        error: function () {
+                            bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
+                                'left': '0px',
+                                'color': '#F00',
+                            });
+                        }
+                    })
+                })
+                $("#gioitinh").kendoComboBox({
+                    dataSource: ["Nam", "Nữ"]
+                });
+
+
+                $("#moiqh").kendoComboBox({
+                    emptyText: " ",
+                    dataTextField: "TenMoiQuanHe",
+                    dataValueField: "ID",
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: '@Url.Action("DanhSachMoiQH", "Parents")',
+                                dataType: 'jsonp',
+                                success: function (msg) {
+                                    options.success(msg.d);
+                                }
+                            },
+                        }
+                    }
+                });
+
+                $("#datepicker").kendoDatePicker({
+                    format: "dd/MM/yyyy",
+                    parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
+                    dateInput: true
+                });
+
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            if (e.target.result != null)
+                                $('#image').attr('src', e.target.result);
+                            src = e.target.result.toString();
+                        }
+
+                        reader.readAsDataURL(input.files[0]);
+
+                    }
+                }
+
+                $("#uploadfile").change(function () {
+                    readURL(this);
+
+                });
+                return false;
+            }
+        });
     });
 
     function submitganhs() {
+
         var idph = $("#idphuhuynh").val();
         var idhs = $("#idhocsinh").data("kendoComboBox").value();
-
+        console.log(idph + " " + idhs);
         var data = {
-            "ID_PhuHuynh": idphuhuynh,
-            "ID_HocSinh": idhocsinh
+            "ID_PhuHuynh": idph,
+            "ID_HocSinh": idhs
         };
-
+        console.log(data);
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "/Parents/GanHocSinh",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: Sys.Serialization.JavaScriptSerializer.serialize(data),
+            data: data,
             success: function (msg) {
-                if (msg.d) {
+                if (msg) {
                     $("#ganhs").data("kendoWindow").close();
-                    bootbox.alert({
-                        message: "Gán thành công!"
-                    })
+                    bootbox.alert('Thao tác thành công, dữ liệu đã được cập nhật!').find('div.modal-dialog').css({
+                        'left': '0px',
+                        'color': '#F00',
+                    });
                 }
                 else {
+                    console.log(msg);
                     $("#ganhs").data("kendoWindow").close();
-                    bootbox.alert({
-                        message: "Gán không thành công!"
-                    })
+                    bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
+                        'left': '0px',
+                        'color': '#F00',
+                    });
                 }
+            },
+            error: function () {
+                bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
+                    'left': '0px',
+                    'color': '#F00',
+                });
             }
         });
     }
@@ -366,19 +448,20 @@
             "Ten": ten,
             "MaThe": mathe
         }
-
+        console.log(data);
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "/Parents/DanhSachPHLoc",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data),
+            data: data,
             success: function (msg) {
                 var ds = new kendo.data.DataSource({
                     data: msg
                 });
-
+                var dataBinding = new kendo.data.dataBinding(function () {
+                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                });
                 $('#grid').data('kendoGrid').setDataSource(ds);
+                $('#grid').data('kendoGrid').dataBinding(dataBinding)
             },
             error: function () {
                 $('#grid').data('kendoGrid').dataSource.read();
@@ -386,19 +469,43 @@
             }
         });
     }
-        //$("#grid").data("kendoGrid").dataSource.data(d.data());
-   //function importexcel() {
-    //    //$("#import").kendoUpload();
-    //}
+    //$("#grid").data("kendoGrid").dataSource.data(d.data());
+    function importexcel() {
+        $("#window").getKendoWindow().open();
+    }
+    //function accept() {
+    //    var xhr = new XMLHttpRequest();
+    //    var fd = new FormData();
+    //    fd.append("file", document.getElementById('excel').files[0]);
+    //    xhr.open("POST", "/Parents/ImportEx", true);
+    //    xhr.send(fd);
+    //    xhr.addEventListener("load", function (event) {
+    //        alert(event.target.response);
+    //    }, false);
+    //};
+    function cancel() {
+        $("#window").getKendoWindow().close();
+    };
 </script>
 
+<div id="window">
+    <form action="ImportEx" method="post" enctype="multipart/form-data">
+        <input id="file" type="file" name:"file" />
+        <br />
 
+        <input type="submit" />
+    </form>
+    
+    @*<div style="float:right">
+        <button id="exaccept" class=".k-button" onclick="accept()"><span class='k-icon k-i-check'></span>Thêm dữ liệu</button>
+        <button id="excancel" class=".k-button" onclick="cancel()"><span class='k-icon k-i-cancel'></span>Hủy</button>
+    </div>*@
+</div>
 <script type="text/x-kendo-template" id="toolbarloc">
-    `
     <div class="row" style="margin-left: 5px">
         <div class="col-sm-4" style="text-align:start">
             <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
-            <a class="k-button" onclick="importexcel()"><span class="k-icon k-i-download"></span> ImportExcel</a>
+            <a class="k-button" onclick="importexcel()"><span class="k-icon k-i-download"></span> Thêm dữ liệu từ Excel</a>
         </div>
 
         <div class="col-sm-8" style="text-align:end">
@@ -441,8 +548,8 @@
 </div>
 
 
-<script type="text/x-kendo-template" id="toolbarloc">`
-    <div class="row"  style="margin-left: 5px">
+<script type="text/x-kendo-template" id="toolbarloc">
+    <div class="row" style="margin-left: 5px">
         <a class="k-button k-grid-add"><span class="glyphicon glyphicon-plus"></span>Tạo mới</a>
         <label class="required">Tên:</label>
         <input class="k-textbox" style="height:2.13em;" />
@@ -453,16 +560,16 @@
 <script id="popup_editor" type="text/x-kendo-template">
     <p>
         <div class="row" style="text-align:center; margin-bottom:10px">
-            <img id="image" class='customer-photo2' src="#:Path#"/>
+            <img id="image" class='customer-photo2' src="#:Path#" />
         </div>
 
         <div class="row" style="margin: 10px">
             <div class="col-sm-5"></div>
 
             <div class="col-sm-2">
-                <div> <input type="file" id="uploadfile"/></div>
+                <div> <input type="file" id="uploadfile" /></div>
             </div>
-            
+
             <div class="col-sm-5"></div>
         </div>
     </p>
@@ -496,7 +603,7 @@
                 <label> Ngày sinh: </label>
             </div>
             <div class="col-sm-4">
-                <input id="datepicker" data-bind="value: NgaySinh"  value="10/10/2011"  style="width: 93%" />
+                <input id="datepicker" data-bind="value: NgaySinh" value="10/10/2011" style="width: 93%" />
             </div>
         </div>
     </p>
@@ -518,11 +625,7 @@
                 <label> Giới tính: </label>
             </div>
             <div class="col-sm-4">
-                <select id="gioitinh" placeholder="Chọn giới tính..." style="width: 93%;">
-                    <option>Nam</option>
-                    <option>Nữ</option>
-                    <option>Khác</option>
-                </select>
+                <input id="gioitinh" data-source="dataSource" data-bind="value: GioiTinh" placeholder="Chọn giới tính..." style="width: 93%;">
             </div>
         </div>
     </p>
@@ -557,7 +660,7 @@
         margin-left: 5px;
     }
 
-     .customer-photo2 {
+    .customer-photo2 {
         display: inline-block;
         width: 120px;
         height: 150px;
@@ -583,8 +686,7 @@
         color: #FFFFFF;
     }
 
-    input.k-textbox
-    {
+    input.k-textbox {
         height: 3.13em;
     }
 </style>

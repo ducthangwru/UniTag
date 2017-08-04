@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,6 +15,7 @@ namespace UniTagWEB.Controllers
 {
     public class ParentsController : BaseController
     {
+        public static int idAnh { get; set; }
         // GET: Parents
         public ActionResult Index()
         {
@@ -30,13 +33,15 @@ namespace UniTagWEB.Controllers
         {
             IEnumerable<PhuHuynhWebOBJ> model = new List<PhuHuynhWebOBJ>();
             model = PhuHuynhWebDB.DanhSachPhuHuynh(Ten, MaThe);
-            return this.Jsonp(model);
+            return this.Json(model,JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Insert()
         {
             var model = this.DeserializeObject<List<PhuHuynhWebOBJ>>("models");
-            bool r = PhuHuynhWebDB.Insert(model.FirstOrDefault());
+            bool r = false;
+            if(idAnh>0)
+                r = PhuHuynhWebDB.Insert(model.FirstOrDefault(), idAnh);
             return this.Jsonp(r);
         }
 
@@ -82,17 +87,55 @@ namespace UniTagWEB.Controllers
             return this.Jsonp(model);
         }
 
-        public JsonResult DanhSachHocSinh()
+        public JsonResult DanhSachHocSinh(int idlop)
         {
             IEnumerable<HocSinhWebModel> model = new List<HocSinhWebModel>();
-            model = HocSinhWebDB.DanhSachHS();
-            return this.Jsonp(model);
+            model = HocSinhWebDB.DanhSachHSTheoLop(idlop);
+            return this.Json(model);
         }
 
-        public JsonpResult GanHocSinh(string ID_PhuHuynh, string ID_HocSinh)
+        public JsonResult GanHocSinh(string ID_PhuHuynh, string ID_HocSinh)
         {
             bool r = PhuHuynhWebDB.GanHocSinh(ID_PhuHuynh, ID_PhuHuynh);
-            return this.Jsonp(r);
+            return this.Json(r, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdatePhuHuynh(string base64, int idPH)
+        {
+            UniTagWEB.Common.Utils.Respon res = Common.Utils.ImageFromBase64(base64);
+            if (res == null) return this.Json(0, JsonRequestBehavior.AllowGet);
+            string date = DateTime.Now.ToString("ddMMyyyyHHmmss");
+            string path = Path.Combine(Server.MapPath("~/Images/ImagesPhuHuynh/"), date + res.extension);
+            res.image.Save(path);
+            bool r = PhuHuynhWebDB.UpdateAnhPhuHuynh("/Images/ImagesPhuHuynh/" + date + res.extension, idPH);
+            return this.Json(r, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ThemAnhPhuHuynh(string base64)
+        {
+            UniTagWEB.Common.Utils.Respon res = Common.Utils.ImageFromBase64(base64);
+            if (res == null) return this.Json(0, JsonRequestBehavior.AllowGet);
+            string date = DateTime.Now.ToString("ddMMyyyyHHmmss");
+            string path = Path.Combine(Server.MapPath("~/Images/ImagesPhuHuynh/"), date + res.extension);
+            res.image.Save(path);
+            idAnh = HocSinhWebDB.ThemAnhHocSinh("/Images/ImagesPhuHuynh/" + date + res.extension);
+            return this.Json(idAnh, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult ImportEx(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                if (file.FileName.EndsWith(".xls"))
+                {
+                    ImportExcel.ImportExcelPhuHuynh(file);
+                }
+                else if (file.FileName.EndsWith(".xlsx"))
+                {
+                    ImportExcel.ImportExcelPhuHuynh(file);
+                }
+
+            }
+            return RedirectToAction("Index"); ;
         }
     }
 }

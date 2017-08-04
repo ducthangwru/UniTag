@@ -23,7 +23,7 @@ namespace UniTagDataAccess.DataAccess.Web
             try
             {
                 DataTable dt = db.ExecuteDataSet("sp_WebUniTag_DanhSachHocSinh").Tables[0];
-                foreach(DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
                     HocSinhWebOBJ obj = new HocSinhWebOBJ();
                     obj.ID = int.Parse(dr["ID"].ToString());
@@ -41,7 +41,7 @@ namespace UniTagDataAccess.DataAccess.Web
 
                 return ds;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ds;
             }
@@ -113,26 +113,25 @@ namespace UniTagDataAccess.DataAccess.Web
             }
         }
 
-        public static bool Insert(HocSinhModel obj)
+        public static int Insert(HocSinhModel obj, int idAnh)
         {
             string ngaysinh = "";
             try
             {
-                ngaysinh = DateTime.ParseExact(obj.NgaySinh, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                ngaysinh = DateTime.Parse(obj.NgaySinh).ToString("yyyy-MM-dd");
             }
             catch { }
-
             SqlParameter[] param = new SqlParameter[]
             {
                 new SqlParameter("@IDHocSinh", obj.ID),
-                new SqlParameter("@IDLop", obj.LopOBJ.IDLop),
+                new SqlParameter("@IDImage", idAnh),
+                new SqlParameter("@IDLop", obj.IDLop.IDLop),
                 new SqlParameter("@Ten", obj.Ten),
                 new SqlParameter("@NgaySinh", ngaysinh),
-                new SqlParameter("@GioiTinh", obj.GioiTinh.value),
+                new SqlParameter("@GioiTinh", obj.GioiTinh),
                 new SqlParameter("@DiaChi", obj.DiaChi)
             };
-
-            return db.ExecuteNonQuery("sp_WebUniTag_InsertOrUpdateHocSinh", param) > 0;
+            return int.Parse(db.ExecuteScalar("sp_WebUniTag_InsertOrUpdateHocSinh", param).ToString());
         }
 
         public static bool Update(HocSinhWebOBJ obj)
@@ -140,13 +139,14 @@ namespace UniTagDataAccess.DataAccess.Web
             string ngaysinh = "";
             try
             {
-                ngaysinh = DateTime.ParseExact(obj.NgaySinh, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                ngaysinh = DateTime.Parse(obj.NgaySinh).ToString("yyyy-MM-dd");
             }
             catch { }
 
             SqlParameter[] param = new SqlParameter[]
             {
                 new SqlParameter("@IDHocSinh", obj.ID),
+                new SqlParameter("@IDImage",obj.IDImage),
                 new SqlParameter("@IDLop", obj.IDLop),
                 new SqlParameter("@Ten", obj.Ten),
                 new SqlParameter("@NgaySinh", ngaysinh),
@@ -160,6 +160,64 @@ namespace UniTagDataAccess.DataAccess.Web
         public static bool DeleteHocSinh(int IDHocSinh)
         {
             return db.ExecuteNonQuery("sp_WebUniTag_DeleteHocSinh", new SqlParameter("@IDHocSinh", IDHocSinh)) > 0;
+        }
+        public static List<HocSinhWebModel> DanhSachHSTheoLop(int idlop)
+        {
+            List<HocSinhWebModel> ds = new List<HocSinhWebModel>();
+            try
+            {
+                DataTable dt = db.ExecuteDataSet("sp_WebUniTag_DanhSachHocSinhTheoLop", new SqlParameter("@idlop", idlop)).Tables[0];
+                foreach (DataRow dr in dt.Rows)
+                {
+                    HocSinhWebModel obj = new HocSinhWebModel();
+                    obj.IDHocSinh = int.Parse(dr["ID"].ToString());
+                    obj.TenHocSinh = dr["Ten"].ToString();
+                    ds.Add(obj);
+                }
+
+                return ds;
+            }
+            catch (Exception ex)
+            {
+                return ds;
+            }
+        }
+        public static bool UpdateAnhHocSinh(string path, int idHS)
+        {
+            try
+            {
+                string time = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                SqlParameter[] param = new SqlParameter[]{
+                    new SqlParameter("@path", path),
+                    new SqlParameter("@thoigianchup", time)
+                };
+                int idAnh = int.Parse(db.ExecuteScalar("sp_AppUniTag_ThemAnh", param).ToString());
+                SqlParameter[] param1 = new SqlParameter[]{
+                    new SqlParameter("@IDHocSinh", idHS),
+                    new SqlParameter("@IDImage", idAnh)
+                };
+                return db.ExecuteNonQuery("sp_WebUniTag_UpdateImageHocSinh", param1) > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public static int ThemAnhHocSinh(string path)
+        {
+            try
+            {
+                string time = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                SqlParameter[] param = new SqlParameter[]{
+                    new SqlParameter("@path", path),
+                    new SqlParameter("@thoigianchup", time)
+                };
+                return int.Parse(db.ExecuteScalar("sp_AppUniTag_ThemAnh", param).ToString());
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
     }
 }
