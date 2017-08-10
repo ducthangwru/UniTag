@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using UniTagDataAccess.DataAccess.App;
+using UniTagDataAccess.DataAccess.Web;
 using UniTagDataAccess.Objects.App;
 namespace UniTagWEB.Controllers
 {
@@ -25,11 +27,11 @@ namespace UniTagWEB.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, obj);
 
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                return Request.CreateResponse(HttpStatusCode.OK, obj);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
         [HttpGet]
@@ -45,33 +47,33 @@ namespace UniTagWEB.Controllers
                     obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, obj);
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                return Request.CreateResponse(HttpStatusCode.OK, obj);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
-        [HttpGet]
-        public HttpResponseMessage GetDanhSachCa([FromUri]string ngay, [FromUri]int idlop)
-        {
-            ThongTinGetCaCheckin obj = new ThongTinGetCaCheckin();
-            try
-            {
-                obj.dsca = CaCheckinDB.DanhSachCaTheoNgay(ngay, idlop);
-                if (obj.dsca.Count > 0)
-                {
-                    obj.status = true;
-                    obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
-                    return Request.CreateResponse(HttpStatusCode.OK, obj);
-                }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-            }
-        }
+        //[HttpGet]
+        //public HttpResponseMessage GetDanhSachCa([FromUri]string ngay, [FromUri]int idlop)
+        //{
+        //    ThongTinGetCaCheckin obj = new ThongTinGetCaCheckin();
+        //    try
+        //    {
+        //        obj.dsca = CaCheckinDB.DanhSachCaTheoNgay(ngay, idlop);
+        //        if (obj.dsca.Count > 0)
+        //        {
+        //            obj.status = true;
+        //            obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
+        //            return Request.CreateResponse(HttpStatusCode.OK, obj);
+        //        }
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+        //    }
+        //}
         [HttpGet]
         public HttpResponseMessage getDanhSachCheckinTheoCa([FromUri]string ngay, [FromUri] int idlop, [FromUri] int idca, [FromUri] string timkiem)
         {
@@ -85,11 +87,11 @@ namespace UniTagWEB.Controllers
                     obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, obj);
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                return Request.CreateResponse(HttpStatusCode.OK, obj);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
         [HttpGet]
@@ -105,14 +107,36 @@ namespace UniTagWEB.Controllers
                     obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, obj);
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                return Request.CreateResponse(HttpStatusCode.OK, obj);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
+        [HttpGet]
+        public HttpResponseMessage getSiSoTheoLop([FromUri] int idlop)
+        {
+            ThongTinSiSo obj = new ThongTinSiSo();
+            try
+            {
+                obj.siso = LopHocAppDB.ThongTinSiSoTheoLopTrongNgay(idlop, DateTime.Now.ToString("yyyy-MM-dd"));
+                if (!obj.siso.Equals(""))
+                {
+                    obj.status = true;
+                    obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
+                    return Request.CreateResponse(HttpStatusCode.OK, obj);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, obj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
+            }
+        }
+        
     }
+    
 
     public class ThongTinGetNgayCheckin
     {
@@ -161,5 +185,17 @@ namespace UniTagWEB.Controllers
         public bool status { get; set; }
         public string msg { get; set; }
         public List<HocSinhCheckinAppOBJ> dshs { get; set; }
+    }
+    public class ThongTinSiSo
+    {
+        public ThongTinSiSo()
+        {
+            status = false;
+            msg = UniTagDataAccess.Utils.Utils.MSG_ERROR;
+            siso = "";
+        }
+        public bool status { get; set; }
+        public string msg { get; set; }
+        public string siso { get; set; }
     }
 }

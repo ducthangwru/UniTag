@@ -14,6 +14,7 @@
     <link href="~/Content/kendo.material.min.css" rel="stylesheet" />
     <link href="~/Content/kendo.material.mobile.min.css" rel="stylesheet" />
     <link href="~/Content/kendo.rtl.min.css" rel="stylesheet" />
+
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
     <script src="~/Scripts/jquery.min.js"></script>
@@ -23,7 +24,8 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/bootbox.min.js"></script>
     <script src="~/Scripts/Site.js"></script>
-
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/Assets/vendor/bootstrap/js/bootstrap.min.js"></script>    
 
     <link href="~/Assets/customstyle/customstyle.css" rel="stylesheet" />
     <!-- Bootstrap Core CSS -->
@@ -115,12 +117,12 @@
             function hamburger_cross() {
 
                 if (isClosed == true) {
-                    overlay.hide();
+                    //overlay.hide();
                     trigger.removeClass('is-open');
                     trigger.addClass('is-closed');
                     isClosed = false;
                 } else {
-                    overlay.show();
+                    //overlay.show();
                     trigger.removeClass('is-closed');
                     trigger.addClass('is-open');
                     isClosed = true;
@@ -134,12 +136,11 @@
             });
 
         });
-
     </script>
 </head>
 <body>
     <div id="wrapper">
-        <div class="overlay"></div>
+        <div class="overlay" ></div>
 
         <!-- Sidebar -->
         <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
@@ -150,8 +151,8 @@
                     </a>
                 </li>
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <li class="dropdown" id="d">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" >
                         <span class="glyphicon glyphicon-wrench"></span>
                         <b class="b-title">   Quản lý học sinh </b><b class="b-caret"><span class="caret"></span></b>
                     </a>

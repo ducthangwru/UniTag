@@ -26,7 +26,7 @@ namespace UniTagDataAccess.DataAccess.App
                 new SqlParameter("@XacNhan", XacNhan)
             };
 
-            return db.ExecuteNonQuery("sp_AppUniTag_InsertCheckin", param) > 0;
+            return db.ExecuteNonQuery("sp_AppUniTag_InsertCheckin", param) > 1;
         }
     }
 }

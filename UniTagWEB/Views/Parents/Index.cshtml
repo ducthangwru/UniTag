@@ -152,8 +152,8 @@
                         NgaySinh: { editable: true, nullable: false },
                         GioiTinh: { editable: true, nullable: false },
                         DiaChi: { editable: true, nullable: false },
-                        Path: { teditable: true, nullable: false, type:"string", defaultValue: "@(string.Format("{0}/Images/ImagesHocSinh/03082017103653.png", UniTagDataAccess.Utils.Utils.BASEURL))"  },
-                        isActive: { editable: true, nullable: false, defaultValue: "Chưa kích hoạt" }
+                        Path: { teditable: true, nullable: false, type: "string", defaultValue: "@(string.Format("{0}/Images/ImagesHocSinh/03082017103653.png", UniTagDataAccess.Utils.Utils.BASEURL))" },
+                        isActive: { editable: true, nullable: false, defaultValue: "Đã kích hoạt" }
                     }
                 }
             }
@@ -163,11 +163,7 @@
         $("#grid").kendoGrid({
             dataSource: dataSource,
             height: 550,
-            groupable: {
-                messages: {
-                    empty: "Kéo cột vào đây để nhóm "
-                }
-            },
+            groupable: false,
             toolbar: kendo.template($("#toolbarloc").html()),
             sortable: true,
             pageable: {
@@ -175,8 +171,8 @@
                 pageSizes: [5, 10, 15, "Tất cả"],
                 buttonCount: 5,
                 messages: {
-                    itemsPerPage: "số phụ huynh trên trang",
-                    display: "Hiển thị {0}-{1} của {2} phụ huynh",
+                    itemsPerPage: "phụ huynh trên trang",
+                    display: "{0}-{1} của {2} phụ huynh",
                     empty: "Không có dữ liệu",
                     allPages: "Hiển thị tất cả",
                     page: "Nhập trang",
@@ -190,21 +186,16 @@
             },
             columns: [
                 {
-                    title: "STT",
-                    template: "#= ++record #",
-                    width: '5%'
-                },
-                {
                     template: "<div class='customer-photo'" +
                                     "style='background-image: url(#:Path#);'></div>" +
                                 "<div class='customer-name'>#: TenPhuHuynh #</div>",
                     field: "TenPhuHuynh",
                     title: "Họ và Tên",
-                    width: '20%'
+                    width: '25%'
                 }, {
                     field: "IDThe",
                     title: "Mã thẻ RFID",
-                    width: '15%'
+                    width: '17%'
                 }, {
                     field: "GioiTinh",
                     title: "Giới tính",
@@ -220,7 +211,7 @@
                                 "else{#<a role='button' id='active' onclick = \"changeColor(this,'#=IDThe#')\" class='k-button k-button-icontext button1'>#= isActive#</button>#}#",
                     field: "isActive",
                     title: "Trạng thái",
-                    width: '12%'
+                    width: '15%'
                 },
             {
                 command: [{
@@ -277,9 +268,6 @@
                     }
                 }
             },
-            dataBinding: function () {
-                record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
-            },
             edit: function (e) {
                 e.preventDefault();
                 var item = e.model;
@@ -317,23 +305,16 @@
                         data: JSON.stringify(data),
                         contentType: "application/json; charset=utf-8",
                         success: function (res) {
-                            if (res === true) {
+                            if (res != 0) {
                                 console.log("success");
                                 $('#grid').data('kendoGrid').dataSource.read();
                             }
                             else {
-                                if (res === 0) {
-                                    bootbox.alert('Vui lòng tải ảnh định dạng .jpg, .png, .gif và kích thước ảnh tối đa 1 MB!').find('div.modal-dialog').css({
-                                        'left': '0px',
-                                        'color': '#F00',
-                                    });
-                                }
-                                else {
-                                    bootbox.alert('Cập nhật không thành công!').find('div.modal-dialog').css({
-                                        'left': '0px',
-                                        'color': '#F00',
-                                    });
-                                }
+                                bootbox.alert('Vui lòng tải ảnh định dạng .jpg, .png, .gif và kích thước ảnh tối đa 1 MB!').find('div.modal-dialog').css({
+                                    'left': '0px',
+                                    'color': '#F00',
+                                });
+
                             }
                         },
                         error: function () {
@@ -457,11 +438,7 @@
                 var ds = new kendo.data.DataSource({
                     data: msg
                 });
-                var dataBinding = new kendo.data.dataBinding(function () {
-                    record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
-                });
                 $('#grid').data('kendoGrid').setDataSource(ds);
-                $('#grid').data('kendoGrid').dataBinding(dataBinding)
             },
             error: function () {
                 $('#grid').data('kendoGrid').dataSource.read();
@@ -473,33 +450,21 @@
     function importexcel() {
         $("#window").getKendoWindow().open();
     }
-    //function accept() {
-    //    var xhr = new XMLHttpRequest();
-    //    var fd = new FormData();
-    //    fd.append("file", document.getElementById('excel').files[0]);
-    //    xhr.open("POST", "/Parents/ImportEx", true);
-    //    xhr.send(fd);
-    //    xhr.addEventListener("load", function (event) {
-    //        alert(event.target.response);
-    //    }, false);
-    //};
+
     function cancel() {
         $("#window").getKendoWindow().close();
     };
 </script>
 
 <div id="window">
-    <form action="ImportEx" method="post" enctype="multipart/form-data">
-        <input id="file" type="file" name:"file" />
-        <br />
-
-        <input type="submit" />
+    <form role="form" name="form1" method="post" action="@Url.Action("Import", "Parents")" enctype="multipart/form-data">
+        <div>
+            <input name="myFile" type="file" />
+        </div>
+        <div>
+            <input type="submit" value="Upload" />
+        </div>
     </form>
-    
-    @*<div style="float:right">
-        <button id="exaccept" class=".k-button" onclick="accept()"><span class='k-icon k-i-check'></span>Thêm dữ liệu</button>
-        <button id="excancel" class=".k-button" onclick="cancel()"><span class='k-icon k-i-cancel'></span>Hủy</button>
-    </div>*@
 </div>
 <script type="text/x-kendo-template" id="toolbarloc">
     <div class="row" style="margin-left: 5px">
@@ -649,13 +614,13 @@
 <style type="text/css">
     .customer-photo {
         display: inline-block;
-        width: 80px;
-        height: 100px;
-        border-radius: 0%;
-        background-size: 80px 100px;
+        width: 60px;
+        height: 80px;
+        border-radius: 50%;
+        background-size: 60px 80px;
         background-position: center center;
         vertical-align: middle;
-        line-height: 100px;
+        line-height: 80px;
         box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
         margin-left: 5px;
     }
@@ -664,7 +629,7 @@
         display: inline-block;
         width: 120px;
         height: 150px;
-        border-radius: 0%;
+        border-radius: 50%;
         background-size: 120px 150px;
         background-position: center center;
         vertical-align: middle;
@@ -677,7 +642,7 @@
         display: inline-block;
         vertical-align: middle;
         line-height: 32px;
-        padding-left: 3px;
+        padding-left: 8px;
     }
 </style>
 

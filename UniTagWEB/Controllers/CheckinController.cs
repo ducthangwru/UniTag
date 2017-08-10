@@ -21,10 +21,23 @@ namespace UniTagWEB.Controllers
             try
             {
                 obj.chitiet = PhuHuynhAppDB.GetThongTinPhuHuynhTheoIDThe(id, idLop, idCa);
-                if (string.IsNullOrEmpty(obj.chitiet.IDThe))
+                
+                if (obj.chitiet == null )
                 {
                     obj.chitiet = new PhuHuynhAppOBJ();
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                    obj.msg = "Học sinh đã được trả hoặc chưa đến lớp!";
+                    return Request.CreateResponse(HttpStatusCode.OK, obj);
+                }
+                else if( obj.chitiet.IDThe.Equals("wrong") ){
+                    obj.chitiet = new PhuHuynhAppOBJ();
+                    obj.msg = "Thẻ không tồn tại!";
+                    return Request.CreateResponse(HttpStatusCode.OK, obj);
+                }
+                else if (obj.chitiet.HocSinh.ID == 0)
+                {
+                    obj.chitiet = new PhuHuynhAppOBJ();
+                    obj.msg = "Không có học sinh ở lớp này";
+                    return Request.CreateResponse(HttpStatusCode.OK, obj);
                 }
                 obj.status = true;
                 obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
@@ -33,7 +46,7 @@ namespace UniTagWEB.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
 
@@ -60,12 +73,12 @@ namespace UniTagWEB.Controllers
                             var extension = ext.ToLower();
                             if (!AllowedFileExtensions.Contains(extension))
                             {
-                                return Request.CreateResponse(HttpStatusCode.BadRequest, "Yêu cầu tải ảnh dạng .jpg,.gif,.png.");
+                                return Request.CreateResponse(HttpStatusCode.OK, "Yêu cầu tải ảnh dạng .jpg,.gif,.png.");
                             }
                             else if (file.ContentLength > MaxContentLength)
                             {
 
-                                return Request.CreateResponse(HttpStatusCode.BadRequest, "Yêu cầu tải ảnh tối đa 1 Mb.");
+                                return Request.CreateResponse(HttpStatusCode.OK, "Yêu cầu tải ảnh tối đa 1 Mb.");
                             }
                             else
                             {
@@ -79,27 +92,26 @@ namespace UniTagWEB.Controllers
                 }
 
                 ThongTinCheckinOBJ OBJ = new ThongTinCheckinOBJ();
-                OBJ.siso = LopHocAppDB.ThongTinSiSoTheoCaDuaDon(CaDuaDon, IDHocSinh, Lop, DateTime.Now.ToString("yyyy-MM-dd"));
+                OBJ.siso = LopHocAppDB.ThongTinSiSoTheoLopTrongNgay(Lop, DateTime.Now.ToString("yyyy-MM-dd"));
 
                 if (idimage > 0 && CheckinAppDB.InsertCheckin(IDPhuHuynh, IDHocSinh, Lop, idimage, CaDuaDon, XacNhan))
                 {
                     OBJ.status = true;
-                    OBJ.siso = LopHocAppDB.ThongTinSiSoTheoCaDuaDon(CaDuaDon, IDHocSinh, Lop, DateTime.Now.ToString("yyyy-MM-dd"));
+                    OBJ.siso = LopHocAppDB.ThongTinSiSoTheoLopTrongNgay(Lop, DateTime.Now.ToString("yyyy-MM-dd"));
                     OBJ.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
                     return Request.CreateResponse(HttpStatusCode.OK, OBJ);
                 }
-
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, OBJ);
+                    return Request.CreateResponse(HttpStatusCode.OK, OBJ);
                 }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
-
+        
         public class ThongTinCheckinOBJ
         {
             public ThongTinCheckinOBJ()

@@ -84,22 +84,22 @@
                         NgaySinh: { editable: true, nullable: true },
                         GioiTinh: { editable: true, nullable: true },
                         DiaChi: { editable: true, nullable: true },
-                        Path: { editable: true, nullable: false, type:"string", defaultValue: "@(string.Format("{0}/Images/ImagesHocSinh/03082017103653.png", UniTagDataAccess.Utils.Utils.BASEURL))" },
+                        Path: { editable: true, nullable: false, type: "string", defaultValue: "@(string.Format("{0}/Images/ImagesHocSinh/03082017103653.png", UniTagDataAccess.Utils.Utils.BASEURL))" },
                         Lop: { editable: true, nullable: true }
                     }
                 }
             }
         });
 
-
+        var wd = $("#window").kendoWindow({
+            width: "600px",
+            title: "Thêm dữ liệu từ Excel",
+            visible: false
+        }).data("kendoWindow").center();
         $("#grid").kendoGrid({
             dataSource: dataSource,
             height: 550,
-            groupable: {
-                messages: {
-                    empty: "Kéo cột vào đây để nhóm "
-                }
-            },
+            groupable: false,
             toolbar: kendo.template($("#toolbarloc").html()),
             sortable: true,
             pageable: {
@@ -108,7 +108,7 @@
                 buttonCount: 5,
                 messages: {
                     itemsPerPage: "số trẻ trên trang",
-                    display: "Hiển thị {0}-{1} của {2} trẻ",
+                    display: "{0}-{1} của {2} trẻ",
                     empty: "Không có dữ liệu",
                     allPages: "Hiển thị tất cả",
                     page: "Nhập trang",
@@ -227,7 +227,7 @@
 
                 $("#gioitinh").kendoComboBox({
                     dataSource: [
-                        "Nam","Nữ"
+                        "Nam", "Nữ"
                     ]
                     //dataTextField: "text",
                     //dataValueField: "text"
@@ -252,7 +252,7 @@
                         item.set("Lop", $("#idlop").data("kendoComboBox").text());
                     }
                 });
-               
+
                 $("#datepicker").kendoDatePicker({
                     format: "dd/MM/yyyy",
                     parseFormats: ["dd/MM/yyyy", "dd/MM/yyyy"],
@@ -331,13 +331,23 @@
                 $('#grid').data('kendoGrid').refresh();
             }
         });
-        //$("#grid").data("kendoGrid").dataSource.data(d.data());
-
-
-
     }
-</script>
 
+    function importexcel() {
+        $("#window").getKendoWindow().open();
+    }
+
+</script>
+<div id="window">
+    <form role="form" name="form1" method="post" data- action="@Url.Action("Import","Students")" enctype="multipart/form-data">
+        <div>
+            <input name="myFile" type="file" />
+        </div>
+        <div>
+            <input type="submit" value="Upload" />
+        </div>
+    </form>
+</div>
 <script type="text/x-kendo-template" id="toolbarloc">
     <div class="row" style="margin-left: 5px">
         <div class="col-sm-4" style="text-align:start">
@@ -360,7 +370,7 @@
 <script id="popup_editor" type="text/x-kendo-template">
     <p>
         <div class="row" style="text-align:center; margin-bottom:10px">
-            <img id="image" class="customer-photo2" src="#:Path#"/>
+            <img id="image" class="customer-photo2" src="#:Path#" />
         </div>
 
         <div class="row" style="margin: 10px">
@@ -415,7 +425,7 @@
             </div>
             <div class="col-sm-4">
                 <input id="gioitinh" data-source="dataSource" placeholder="Chọn giới tính..." style="width: 230px;" data-bind="value:GioiTinh">
-                    
+
             </div>
         </div>
     </p>
@@ -426,7 +436,7 @@
                 <label> Lớp: </label>
             </div>
             <div class="col-sm-4">
-                <input id="idlop" data-bind="value: IDLop"  data-source="dataSource" placeholder="Chọn lớp..." style="width: 230px" />
+                <input id="idlop" data-bind="value: IDLop" data-source="dataSource" placeholder="Chọn lớp..." style="width: 230px" />
                 <h1 id="lop" data-source="dataSource" data-bind="value: Lop" hidden></h1>
             </div>
         </div>

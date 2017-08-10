@@ -33,14 +33,14 @@ namespace UniTagWEB.Controllers
         {
             IEnumerable<PhuHuynhWebOBJ> model = new List<PhuHuynhWebOBJ>();
             model = PhuHuynhWebDB.DanhSachPhuHuynh(Ten, MaThe);
-            return this.Json(model,JsonRequestBehavior.AllowGet);
+            return this.Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Insert()
         {
             var model = this.DeserializeObject<List<PhuHuynhWebOBJ>>("models");
             bool r = false;
-            if(idAnh>0)
+            if (idAnh > 0)
                 r = PhuHuynhWebDB.Insert(model.FirstOrDefault(), idAnh);
             return this.Jsonp(r);
         }
@@ -120,22 +120,24 @@ namespace UniTagWEB.Controllers
             idAnh = HocSinhWebDB.ThemAnhHocSinh("/Images/ImagesPhuHuynh/" + date + res.extension);
             return this.Json(idAnh, JsonRequestBehavior.AllowGet);
         }
-        [HttpPost]
-        public ActionResult ImportEx(HttpPostedFileBase file)
+        public ActionResult Import(HttpPostedFileBase myFile)
         {
-            if (file != null && file.ContentLength > 0)
+            if (myFile != null)
             {
-                if (file.FileName.EndsWith(".xls"))
+                string[] exts = myFile.FileName.Split('.');
+                string ext = exts.Last();
+                if (ext == "xlsx" || ext == "xls")
                 {
-                    ImportExcel.ImportExcelPhuHuynh(file);
+                    var filePath = Path.Combine(Server.MapPath("~/" + myFile.FileName));
+                    myFile.SaveAs(filePath);
+                    ImportExcel.ImportExcelToDatabase(filePath, UniTagDataAccess.Utils.ImportExcelType.PHUHUYNH);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
                 }
-                else if (file.FileName.EndsWith(".xlsx"))
-                {
-                    ImportExcel.ImportExcelPhuHuynh(file);
-                }
-
             }
-            return RedirectToAction("Index"); ;
+            return RedirectToAction("Index");
         }
     }
 }

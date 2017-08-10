@@ -15,25 +15,19 @@ namespace UniTagDataAccess.DataAccess.App
         public static SqlDataHelpers db = new SqlDataHelpers();
         public LopHocAppDB() { }
 
-        public static string ThongTinSiSoTheoCaDuaDon(int CaDuaDon, int IDHocSinh, int IDLop, string ThoiGianCheckin)
+        public static string ThongTinSiSoTheoLopTrongNgay(int IDLop, string ThoiGianCheckin)
         {
-            int siso = int.Parse(db.ExecuteScalar("sp_AppUniTag_SiSoLopCuaHocSinh", new SqlParameter("@idhs", IDHocSinh)).ToString());
-            int sisodd = int.Parse(db.ExecuteScalar("sp_AppUniTag_SiSoTrongLopCuaHocSinh", new SqlParameter("@idhs", IDHocSinh), new SqlParameter("@date", ThoiGianCheckin)).ToString());
+            int siso = int.Parse(db.ExecuteScalar("sp_AppUniTag_SiSoTrongLopCuaHocSinh", new SqlParameter("@idlop", IDLop)).ToString());
+            
             SqlParameter[] param = new SqlParameter[]
             {
-                new SqlParameter("@idca", CaDuaDon),
                 new SqlParameter("@idlop", IDLop),
                 new SqlParameter("@date", ThoiGianCheckin)
             };
 
-            int sisohientai = int.Parse(db.ExecuteScalar("sp_AppUniTag_ThongTinSiSoTheoCaDuaDon", param).ToString());
+            int sisohientai = int.Parse(db.ExecuteScalar("sp_AppUniTag_SiSoHienTaiCuaLop", param).ToString());
 
-            if (CaDuaDon == 1)
-                return sisohientai + "/" + siso;
-
-
-            return (sisodd - sisohientai) + "/" + siso;
-
+            return sisohientai + "/" + siso;
         }
 
         public static List<LopHocAppOBJ> DanhSachLopHoc()

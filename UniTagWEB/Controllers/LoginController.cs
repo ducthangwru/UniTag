@@ -27,7 +27,7 @@ namespace UniTagWEB.Controllers
                 if (string.IsNullOrEmpty(obj.thongtin.username))
                 {
                     obj.thongtin = new TaiKhoanAppOBJ();
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+                    return Request.CreateResponse(HttpStatusCode.OK, obj);
                 }
                 obj.status = true;
                 obj.msg = UniTagDataAccess.Utils.Utils.MSG_OK;
@@ -35,7 +35,7 @@ namespace UniTagWEB.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return Request.CreateResponse(HttpStatusCode.OK, ex);
             }
         }
         public class ResponseGetTaiKhoan

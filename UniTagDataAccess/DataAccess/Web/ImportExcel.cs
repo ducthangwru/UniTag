@@ -1,15 +1,18 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using Excel;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using SERVER_ADEN.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using UniTagDataAccess.Utils;
 
 namespace UniTagDataAccess.DataAccess.Web
 {
@@ -17,117 +20,90 @@ namespace UniTagDataAccess.DataAccess.Web
     {
         public static SqlDataHelpers db = new SqlDataHelpers();
         public ImportExcel() { }
-        public static DataTable ExcelToDataTable(HttpPostedFileBase upload)
+        public static void ImportExcelToDatabase(string path, ImportExcelType type)
         {
-            DataTable dt = new DataTable();
-            Stream stream = upload.InputStream;
-            HSSFWorkbook hssfworkbook = new HSSFWorkbook(stream);
-            ISheet sheet = hssfworkbook.GetSheetAt(0);
-            System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
-
-            IRow headerRow = sheet.GetRow(0);
-            int cellCount = headerRow.LastCellNum;
-
-            for (int j = 0; j < cellCount; j++)
+            FileStream stream = new FileStream(path, FileMode.Open);
+            IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            DataSet result = excelReader.AsDataSet();
+            switch (type)
             {
-                ICell cell = headerRow.GetCell(j);
-                dt.Columns.Add(cell.ToString());
+                case ImportExcelType.PHUHUYNH: { importPH(result); break; }
+                case ImportExcelType.HOCSINH: { importHS(result); break; }
             }
-
-            for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
-            {
-                IRow row = sheet.GetRow(i);
-                DataRow dataRow = dt.NewRow();
-                if (row == null)
-                {
-                    break;
-                }
-                for (int j = row.FirstCellNum; j < cellCount; j++)
-                {
-                    if (row.GetCell(j) != null)
-                        dataRow[j] = row.GetCell(j).ToString();
-                }
-
-                dt.Rows.Add(dataRow);
-            }
-            return dt;
         }
-
-        public static bool ImportExcelPhuHuynh(HttpPostedFileBase upload)
+        public static void importPH(DataSet result)
         {
-            try
+            foreach (DataTable dt in result.Tables)
             {
-                DataTable dt = ExcelToDataTable(upload);
                 foreach (DataRow dr in dt.Rows)
                 {
-                    int idmqh = 0;
-                    try
+                    string[] format = new string[]{
+                                          "dd-MM-yyyy",
+                                          "dd/MM/yyyy",
+                                      };
+                    PhuHuynh ph = new PhuHuynh
                     {
-                        idmqh = int.Parse(db.ExecuteScalar(string.Format("select id from MoiQuanHe where TenMoiQuanHe like '%{0}%'", dr["TenMoiQuanHe"].ToString())).ToString());
-                    }
-                    catch
-                    {
-                        idmqh = 0;
-                    }
-                    SqlParameter[] param = new SqlParameter[]
-                    {
-                    new SqlParameter("@IDPhuHuynh", 0),
-                    new SqlParameter("@IDThe", dr["IDThe"].ToString()),
-                    new SqlParameter("@TenPhuHuynh", dr["TenPhuHuynh"].ToString()),
-                    new SqlParameter("@DiaChi", dr["DiaChi"].ToString()),
-                    new SqlParameter("@NgaySinh", dr["NgaySinh"].ToString()),
-                    new SqlParameter("@IDMoiQuanHe", idmqh),
-                    new SqlParameter("@GioiTinh", dr["GioiTinh"].ToString())
+                        IDThe = dr[0].ToString(),
+                        Ten = dr[1].ToString(),
+                        DiaChi = dr[2].ToString(),
+                        NgaySinh = DateTime.ParseExact(dr[3].ToString(), format, null, System.Globalization.DateTimeStyles.None).ToString("yyyy-MM-dd"),
+                        GioiTinh = dr[4].ToString()
                     };
-
-                    db.ExecuteNonQuery("sp_WebUniTag_InsertOrUpdatePhuHuynh", param);
+                    SqlParameter[] param = new SqlParameter[]{
+                        new SqlParameter("@IDThe", ph.IDThe),
+                        new SqlParameter("@TenPhuHuynh", ph.Ten),
+                        new SqlParameter("@DiaChi", ph.DiaChi),
+                        new SqlParameter("@NgaySinh", ph.NgaySinh),
+                        new SqlParameter("@GioiTinh", ph.GioiTinh)
+                    };
+                    db.ExecuteNonQuery("sp_WebUniTag_ThemPHTuExcel", param);
                 }
-
-                return true;
             }
-            catch(Exception ex)
-            {
-                return false;
-            }
-           
         }
-
-        public static bool ImportExcelHocSinh(HttpPostedFileBase upload)
+        public static void importHS(DataSet result)
         {
-            try
+            foreach (DataTable dt in result.Tables)
             {
-                DataTable dt = ExcelToDataTable(upload);
                 foreach (DataRow dr in dt.Rows)
                 {
-                    int idmqh = 0;
-                    try
+                    string[] format = new string[]{
+                                          "dd-MM-yyyy",
+                                          "dd/MM/yyyy",
+                                      };
+                    HocSinh hs = new HocSinh
                     {
-                        idmqh = int.Parse(db.ExecuteScalar(string.Format("select id from MoiQuanHe where TenMoiQuanHe like '%{0}%'", dr["TenMoiQuanHe"].ToString())).ToString());
-                    }
-                    catch
-                    {
-                        idmqh = 0;
-                    }
-                    SqlParameter[] param = new SqlParameter[]
-                    {
-                    new SqlParameter("@IDPhuHuynh", 0),
-                    new SqlParameter("@IDThe", dr["IDThe"].ToString()),
-                    new SqlParameter("@TenPhuHuynh", dr["TenPhuHuynh"].ToString()),
-                    new SqlParameter("@DiaChi", dr["DiaChi"].ToString()),
-                    new SqlParameter("@NgaySinh", dr["NgaySinh"].ToString()),
-                    new SqlParameter("@IDMoiQuanHe", idmqh),
-                    new SqlParameter("@GioiTinh", dr["GioiTinh"].ToString())
+                        IDLop = int.Parse(dr[0].ToString()),
+                        Ten = dr[1].ToString(),
+                        DiaChi = dr[2].ToString(),
+                        NgaySinh = DateTime.ParseExact(dr[3].ToString(), format, null, System.Globalization.DateTimeStyles.None).ToString("yyyy-MM-dd"),
+                        GioiTinh = dr[4].ToString()
                     };
-
-                    db.ExecuteNonQuery("sp_WebUniTag_InsertOrUpdatePhuHuynh", param);
+                    SqlParameter[] param = new SqlParameter[]{
+                        new SqlParameter("@IDLop", hs.IDLop),
+                        new SqlParameter("@TenHocSinh", hs.Ten),
+                        new SqlParameter("@DiaChi", hs.DiaChi),
+                        new SqlParameter("@NgaySinh", hs.NgaySinh),
+                        new SqlParameter("@GioiTinh", hs.GioiTinh)
+                    };
+                    db.ExecuteNonQuery("sp_WebUniTag_ThemHSTuExcel", param);
                 }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
             }
         }
+    }
+    class PhuHuynh
+    {
+        public string IDThe { get; set; }
+        public string Ten { get; set; }
+        public string DiaChi { get; set; }
+        public string NgaySinh { get; set; }
+        public string GioiTinh { get; set; }
+    }
+    class HocSinh
+    {
+        public int IDLop { get; set; }
+        public string Ten { get; set; }
+        public string DiaChi { get; set; }
+        public string NgaySinh { get; set; }
+        public string GioiTinh { get; set; }
     }
 }

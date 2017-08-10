@@ -60,8 +60,9 @@ namespace UniTagDataAccess.DataAccess.App
                     obj.PhuHuynh.TenPhuHuynh = dr2["TenPhuHuynh"].ToString();
                     obj.PhuHuynh.DiaChi = dr2["DiaChi"].ToString();
                     obj.PhuHuynh.NgaySinh = DateTime.Parse(dr2["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
-                    obj.PhuHuynh.IDMoiQuanHe = 0;
-                    obj.PhuHuynh.MoiQuanHe = "";
+                    DataRow dr3 = db.ExecuteDataSet("sp_AppUniTag_getMQH", new SqlParameter("@idph", obj.PhuHuynh.ID), new SqlParameter("@idhs", HocSinh.ID)).Tables[0].Rows[0];
+                    obj.PhuHuynh.IDMoiQuanHe = int.Parse(dr3["id"].ToString());
+                    obj.PhuHuynh.MoiQuanHe = dr3["TenMoiQuanHe"].ToString();
                     obj.PhuHuynh.GioiTinh = dr2["GioiTinh"].ToString();
                     obj.PhuHuynh.isActive = bool.Parse(dr2["isActive"].ToString());
                     obj.PhuHuynh.HocSinh = HocSinh;
@@ -125,8 +126,9 @@ namespace UniTagDataAccess.DataAccess.App
                     obj.PhuHuynh.TenPhuHuynh = dr2["TenPhuHuynh"].ToString();
                     obj.PhuHuynh.DiaChi = dr2["DiaChi"].ToString();
                     obj.PhuHuynh.NgaySinh = DateTime.Parse(dr2["NgaySinh"].ToString()).ToString("dd/MM/yyyy");
-                    obj.PhuHuynh.IDMoiQuanHe = 0;
-                    obj.PhuHuynh.MoiQuanHe = "";
+                    DataRow dr3 = db.ExecuteDataSet("sp_AppUniTag_getMQH", new SqlParameter("@idph", obj.PhuHuynh.ID), new SqlParameter("@idhs", HocSinh.ID)).Tables[0].Rows[0];
+                    obj.PhuHuynh.IDMoiQuanHe = int.Parse(dr3["id"].ToString());
+                    obj.PhuHuynh.MoiQuanHe = dr3["TenMoiQuanHe"].ToString();
                     obj.PhuHuynh.GioiTinh = dr2["GioiTinh"].ToString();
                     obj.PhuHuynh.isActive = bool.Parse(dr2["isActive"].ToString());
                     obj.PhuHuynh.HocSinh = HocSinh;

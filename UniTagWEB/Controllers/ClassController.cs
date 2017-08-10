@@ -24,7 +24,7 @@ namespace UniTagWEB.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, obj);
             }
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, obj);
+            return Request.CreateResponse(HttpStatusCode.OK, obj);
         }
     }
     public class OBJ

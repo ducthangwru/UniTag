@@ -86,5 +86,24 @@ namespace UniTagWEB.Controllers
             idAnh = HocSinhWebDB.ThemAnhHocSinh("/Images/ImagesHocSinh/" + date + res.extension);
             return this.Json(idAnh, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult Import(HttpPostedFileBase myFile)
+        {
+            if (myFile != null)
+            {
+                var filePath = Path.Combine(Server.MapPath("~/" + myFile.FileName));
+                myFile.SaveAs(filePath);
+                string[] exts = myFile.FileName.Split('.');
+                string ext = exts.Last();
+                if (ext == "xlsx" || ext == "xls")
+                {
+                    ImportExcel.ImportExcelToDatabase(filePath, UniTagDataAccess.Utils.ImportExcelType.HOCSINH);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+            return View();
+        }
     }
 }
